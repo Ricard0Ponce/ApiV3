@@ -3,50 +3,86 @@ package io.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.model.Cita;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import lombok.Data;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 
 /**
  * Alumno
  */
+@Entity // La clase se crea en una entidad
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-03T21:32:08.208259185Z[GMT]")
-
-
-public class Alumno   {
+@Table(name = "Alumno") // Asigna nombre a la tabla.
+@Data // Crea Getters/Setter de la clase con Lombook
+public class Alumno {
+  @Id
   @JsonProperty("id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "alu_id")
   private Integer id = null;
 
+  @Column(name = "alu_matricula")
   @JsonProperty("matricula")
   private String matricula = null;
 
+  @Column(name = "alu_password")
   @JsonProperty("password")
   private String password = null;
+  /*
+   * @JsonProperty("citas")
+   * 
+   * @Valid
+   * 
+   * @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
+   * // @OneToMany(mappedBy = "alumno", cascade =
+   * // CascadeType.ALL)
+   * private List<Cita> citas = null;
+   */
+  // Si pones JsonIgnore no lo agrega al mapping
+  @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
+  @JsonIgnore // Para evitar la serialización recursiva si usas Jackson
+  private List<Cita> citas = new ArrayList<>();
 
-  @JsonProperty("citas")
-  @Valid
-  private List<Cita> citas = null;
-
+  @Column(name = "alu_nombres")
   @JsonProperty("nombres")
   private String nombres = null;
 
+  @Column(name = "alu_apellidopaterno")
   @JsonProperty("apellidoPaterno")
   private String apellidoPaterno = null;
 
+  @Column(name = "alu_apellidomaterno")
   @JsonProperty("apellidoMaterno")
   private String apellidoMaterno = null;
 
+  @Column(name = "alu_email")
   @JsonProperty("email")
   private String email = null;
 
+  @Column(name = "alu_genero")
   @JsonProperty("genero")
   private String genero = null;
 
+  @Column(name = "alu_telefonomovil")
   @JsonProperty("telefonoMovil")
   private String telefonoMovil = null;
 
@@ -57,11 +93,12 @@ public class Alumno   {
 
   /**
    * Get id
+   * 
    * @return id
    **/
   @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "")
-  
-    public Integer getId() {
+
+  public Integer getId() {
     return id;
   }
 
@@ -76,11 +113,13 @@ public class Alumno   {
 
   /**
    * Get matricula
+   * 
    * @return matricula
    **/
   @Schema(description = "")
-  
-  @Size(min=10,max=10)   public String getMatricula() {
+
+  @Size(min = 10, max = 10)
+  public String getMatricula() {
     return matricula;
   }
 
@@ -95,11 +134,12 @@ public class Alumno   {
 
   /**
    * Get password
+   * 
    * @return password
    **/
   @Schema(description = "")
-  
-    public String getPassword() {
+
+  public String getPassword() {
     return password;
   }
 
@@ -122,11 +162,12 @@ public class Alumno   {
 
   /**
    * Get citas
+   * 
    * @return citas
    **/
   @Schema(description = "")
-      @Valid
-    public List<Cita> getCitas() {
+  @Valid
+  public List<Cita> getCitas() {
     return citas;
   }
 
@@ -141,11 +182,12 @@ public class Alumno   {
 
   /**
    * Get nombres
+   * 
    * @return nombres
    **/
   @Schema(description = "")
-  
-    public String getNombres() {
+
+  public String getNombres() {
     return nombres;
   }
 
@@ -160,11 +202,12 @@ public class Alumno   {
 
   /**
    * Get apellidoPaterno
+   * 
    * @return apellidoPaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoPaterno() {
+
+  public String getApellidoPaterno() {
     return apellidoPaterno;
   }
 
@@ -179,11 +222,12 @@ public class Alumno   {
 
   /**
    * Get apellidoMaterno
+   * 
    * @return apellidoMaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoMaterno() {
+
+  public String getApellidoMaterno() {
     return apellidoMaterno;
   }
 
@@ -198,11 +242,12 @@ public class Alumno   {
 
   /**
    * Get email
+   * 
    * @return email
    **/
   @Schema(description = "")
-  
-    public String getEmail() {
+
+  public String getEmail() {
     return email;
   }
 
@@ -217,11 +262,12 @@ public class Alumno   {
 
   /**
    * Get genero
+   * 
    * @return genero
    **/
   @Schema(description = "")
-  
-    public String getGenero() {
+
+  public String getGenero() {
     return genero;
   }
 
@@ -236,18 +282,18 @@ public class Alumno   {
 
   /**
    * Get telefonoMovil
+   * 
    * @return telefonoMovil
    **/
   @Schema(description = "")
-  
-    public String getTelefonoMovil() {
+
+  public String getTelefonoMovil() {
     return telefonoMovil;
   }
 
   public void setTelefonoMovil(String telefonoMovil) {
     this.telefonoMovil = telefonoMovil;
   }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -272,14 +318,15 @@ public class Alumno   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, matricula, password, citas, nombres, apellidoPaterno, apellidoMaterno, email, genero, telefonoMovil);
+    return Objects.hash(id, matricula, password, citas, nombres, apellidoPaterno, apellidoMaterno, email, genero,
+        telefonoMovil);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Alumno {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    matricula: ").append(toIndentedString(matricula)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");

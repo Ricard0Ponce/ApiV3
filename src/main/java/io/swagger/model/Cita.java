@@ -3,7 +3,19 @@ package io.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -13,33 +25,52 @@ import javax.validation.constraints.*;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-03T21:32:08.208259185Z[GMT]")
-
-
-public class Cita   {
+@Entity // La clase se crea en una entidad
+@Table(name = "Cita") // Asigna nombre a la tabla.
+@Data // Crea Getters/Setter de la clase con Lombook
+public class Cita {
+  @Id
   @JsonProperty("id")
-  private Long id = null;
+  @GeneratedValue(strategy = GenerationType.IDENTITY) // Genera su propia llave
+  @Column(name = "cit_id")
+  private Long id = null; // ID De la cita
 
+  @Column(name = "cit_fecha")
   @JsonProperty("fecha")
   private String fecha = null;
 
+  @Column(name = "cit_hora")
   @JsonProperty("hora")
   private String hora = null;
 
+  @Column(name = "cit_idpsiquiatra")
   @JsonProperty("idPsiquiatra")
   private Long idPsiquiatra = null;
 
-  @JsonProperty("idAlumno")
-  private Long idAlumno = null;
+  @ManyToOne
+  @JoinColumn(name = "alumno_id") // Nombre de la columna de la llave foránea en la tabla Cita
+  @JsonIgnore
+  private Alumno alumno;
 
+  /*
+   * @ManyToOne
+   * 
+   * @JsonProperty("idAlumno") // Potencialmente aqui va la relacion
+   * private Integer idAlumno = null; // Se cambio a Integer
+   */
+  @Column(name = "cit_motivocita")
   @JsonProperty("motivoCita")
   private String motivoCita = null;
 
+  @Column(name = "cit_discapacidad")
   @JsonProperty("discapacidad")
   private Boolean discapacidad = null;
 
+  @Column(name = "cit_comunidadindigena")
   @JsonProperty("comunidadIndigena")
   private Boolean comunidadIndigena = null;
 
+  @Column(name = "cit_migrante")
   @JsonProperty("migrante")
   private Boolean migrante = null;
 
@@ -50,11 +81,12 @@ public class Cita   {
 
   /**
    * Get id
+   * 
    * @return id
    **/
   @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "")
-  
-    public Long getId() {
+
+  public Long getId() {
     return id;
   }
 
@@ -69,11 +101,13 @@ public class Cita   {
 
   /**
    * Get fecha
+   * 
    * @return fecha
    **/
   @Schema(description = "")
-  
-  @Pattern(regexp="^\\d{2}/\\d{2}/\\d{4}$")   public String getFecha() {
+
+  @Pattern(regexp = "^\\d{2}/\\d{2}/\\d{4}$")
+  public String getFecha() {
     return fecha;
   }
 
@@ -88,11 +122,12 @@ public class Cita   {
 
   /**
    * Get hora
+   * 
    * @return hora
    **/
   @Schema(description = "")
-  
-    public String getHora() {
+
+  public String getHora() {
     return hora;
   }
 
@@ -107,11 +142,12 @@ public class Cita   {
 
   /**
    * Get idPsiquiatra
+   * 
    * @return idPsiquiatra
    **/
   @Schema(description = "")
-  
-    public Long getIdPsiquiatra() {
+
+  public Long getIdPsiquiatra() {
     return idPsiquiatra;
   }
 
@@ -119,23 +155,24 @@ public class Cita   {
     this.idPsiquiatra = idPsiquiatra;
   }
 
-  public Cita idAlumno(Long idAlumno) {
-    this.idAlumno = idAlumno;
+  public Cita idAlumno(Alumno alumnoo) {
+    this.alumno = alumnoo;
     return this;
   }
 
   /**
    * Get idAlumno
+   * 
    * @return idAlumno
    **/
   @Schema(description = "")
-  
-    public Long getIdAlumno() {
-    return idAlumno;
+
+  public Alumno getAlumno() {
+    return alumno;
   }
 
-  public void setIdAlumno(Long idAlumno) {
-    this.idAlumno = idAlumno;
+  public void setAlumno(Alumno Alumno) {
+    this.alumno = alumno;
   }
 
   public Cita motivoCita(String motivoCita) {
@@ -145,11 +182,12 @@ public class Cita   {
 
   /**
    * Get motivoCita
+   * 
    * @return motivoCita
    **/
   @Schema(description = "")
-  
-    public String getMotivoCita() {
+
+  public String getMotivoCita() {
     return motivoCita;
   }
 
@@ -164,11 +202,12 @@ public class Cita   {
 
   /**
    * Get discapacidad
+   * 
    * @return discapacidad
    **/
   @Schema(description = "")
-  
-    public Boolean isDiscapacidad() {
+
+  public Boolean isDiscapacidad() {
     return discapacidad;
   }
 
@@ -183,11 +222,12 @@ public class Cita   {
 
   /**
    * Get comunidadIndigena
+   * 
    * @return comunidadIndigena
    **/
   @Schema(description = "")
-  
-    public Boolean isComunidadIndigena() {
+
+  public Boolean isComunidadIndigena() {
     return comunidadIndigena;
   }
 
@@ -202,18 +242,18 @@ public class Cita   {
 
   /**
    * Get migrante
+   * 
    * @return migrante
    **/
   @Schema(description = "")
-  
-    public Boolean isMigrante() {
+
+  public Boolean isMigrante() {
     return migrante;
   }
 
   public void setMigrante(Boolean migrante) {
     this.migrante = migrante;
   }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -228,7 +268,7 @@ public class Cita   {
         Objects.equals(this.fecha, cita.fecha) &&
         Objects.equals(this.hora, cita.hora) &&
         Objects.equals(this.idPsiquiatra, cita.idPsiquiatra) &&
-        Objects.equals(this.idAlumno, cita.idAlumno) &&
+        Objects.equals(this.alumno, cita.alumno) &&
         Objects.equals(this.motivoCita, cita.motivoCita) &&
         Objects.equals(this.discapacidad, cita.discapacidad) &&
         Objects.equals(this.comunidadIndigena, cita.comunidadIndigena) &&
@@ -237,19 +277,19 @@ public class Cita   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, fecha, hora, idPsiquiatra, idAlumno, motivoCita, discapacidad, comunidadIndigena, migrante);
+    return Objects.hash(id, fecha, hora, idPsiquiatra, alumno, motivoCita, discapacidad, comunidadIndigena, migrante);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Cita {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    fecha: ").append(toIndentedString(fecha)).append("\n");
     sb.append("    hora: ").append(toIndentedString(hora)).append("\n");
     sb.append("    idPsiquiatra: ").append(toIndentedString(idPsiquiatra)).append("\n");
-    sb.append("    idAlumno: ").append(toIndentedString(idAlumno)).append("\n");
+    sb.append("    Alumno: ").append(toIndentedString(alumno)).append("\n");
     sb.append("    motivoCita: ").append(toIndentedString(motivoCita)).append("\n");
     sb.append("    discapacidad: ").append(toIndentedString(discapacidad)).append("\n");
     sb.append("    comunidadIndigena: ").append(toIndentedString(comunidadIndigena)).append("\n");
