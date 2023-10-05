@@ -25,13 +25,17 @@ public class CitaService {
     public Cita createCita(Cita cita, Long idLong) {
         Integer i = Integer.valueOf(idLong.intValue()); // Pasa de Long a Integer
         if (cita != null) {
-            System.out.println("Buscamos al alumno con el ID:" + i);
-            Optional<Alumno> optionalAlumno = alumnoRepository.findById(i);
-            if (optionalAlumno.isPresent()) {
+            // System.out.println("Buscamos al alumno con el ID: " + i);
+            // Optional<Alumno> optionalAlumno = alumnoRepository.findById(i);
+            if (buscaID(i)) {
+                Optional<Alumno> optionalAlumno = alumnoRepository.findById(i);
                 Alumno alumno = optionalAlumno.get(); // Obtiene el objeto Alumno de Optional si está presente
                 // Realiza operaciones con el objeto Alumno
-                System.out.println("\nAl parecer se encontro al Alumno con el nombre: " + alumno.getNombres());
+                System.out.println("\nAl parecer se encontro al Alumno con el id:  " + alumno.getId());
+                System.out.println("\n El alumno tiene nombre: " + alumno.getNombres());
                 cita.setAlumno(alumno); // No se si esto es correcto , en teoria se asigna el alumno
+                System.out.println("Corroborandp la info, en cita se tiene: " + cita.getAlumno().getNombres() +
+                        "\n Ese es el nombre del alumno");
                 return this.citaRepository.save(cita);
                 // NOTA: LA CREACION DE LA CITA SIRVE PERO HAY QUE MAPPEAR BIEN LAS RESPUESTAS.
                 // APARECE COMO 201 CUANDO NO SE HA CREADO LA CITA
@@ -44,6 +48,18 @@ public class CitaService {
             }
         } else {
             return null;
+        }
+    }
+
+    // Verifico si existe el alumno con el ID
+    public boolean buscaID(Integer id) {
+        System.out.println("Buscamos al alumno con el ID: " + id);
+        Optional<Alumno> optionalAlumno = alumnoRepository.findById(id);
+        if (optionalAlumno.isPresent()) {
+            return true;
+        } else {
+            System.out.println("No se encontro al alumno con dicho ID");
+            return false;
         }
     }
 }

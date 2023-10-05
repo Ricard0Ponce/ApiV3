@@ -110,19 +110,25 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                System.out.println("Se valido hasta la entrada de la creacion del objeto");
-                Cita citaf = new Cita();
-                citaf.setId(body.getId());
-                citaf.setFecha(body.getFecha());
-                citaf.setHora(body.getHora());
-                citaf.setIdPsiquiatra(body.getIdPsiquiatra());
-                citaf.setMotivoCita(body.getMotivoCita());
-                citaf.setDiscapacidad(body.getDiscapacidad());
-                citaf.setComunidadIndigena(body.getComunidadIndigena());
-                citaf.setMigrante(body.getMigrante());
-                System.out.println("Se almaceno la cita con el ID: " + id);
-                citaService.createCita(body, id);
-                return new ResponseEntity<>(citaf, HttpStatus.CREATED);
+                Integer i = Integer.valueOf(id.intValue()); // Pasa de Long a Integer
+                if (citaService.buscaID(i)) {
+                    // Condicional para saber que el Alumno existe ante de hacer esto:
+                    System.out.println("Se valido hasta la entrada de la creacion del objeto");
+                    Cita citaf = new Cita();
+                    citaf.setId(id); // Darle el valor del ID del alumno
+                    citaf.setFecha(body.getFecha());
+                    citaf.setHora(body.getHora());
+                    citaf.setIdPsiquiatra(body.getIdPsiquiatra());
+                    citaf.setMotivoCita(body.getMotivoCita());
+                    citaf.setDiscapacidad(body.getDiscapacidad());
+                    citaf.setComunidadIndigena(body.getComunidadIndigena());
+                    citaf.setMigrante(body.getMigrante());
+                    System.out.println("Se almaceno la cita con el ID: " + id);
+                    citaService.createCita(body, id); // Se invoca el metodo para crear la cita
+                    return new ResponseEntity<>(citaf, HttpStatus.CREATED);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
             } catch (Exception e) {
                 System.out.println("A sucedido un error");
                 log.error("Couldn't serialize response for content type application/json", e);

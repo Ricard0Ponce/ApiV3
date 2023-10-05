@@ -33,7 +33,7 @@ public class Cita {
   @JsonProperty("id")
   @GeneratedValue(strategy = GenerationType.IDENTITY) // Genera su propia llave
   @Column(name = "cit_id")
-  private Long id = null; // ID De la cita
+  private Long id; // ID De la cita
 
   @Column(name = "cit_fecha")
   @JsonProperty("fecha")
@@ -48,7 +48,7 @@ public class Cita {
   private Long idPsiquiatra = null;
 
   @ManyToOne
-  @JoinColumn(name = "alumno_id") // Nombre de la columna de la llave foránea en la tabla Cita
+  @JoinColumn(name = "alu_id") // Nombre de la columna de la llave foránea en la tabla Cita
   @JsonIgnore
   private Alumno alumno;
 
@@ -155,8 +155,8 @@ public class Cita {
     this.idPsiquiatra = idPsiquiatra;
   }
 
-  public Cita idAlumno(Alumno alumnoo) {
-    this.alumno = alumnoo;
+  public Cita Alumno(Alumno alumno) {
+    this.alumno = alumno;
     return this;
   }
 
@@ -171,7 +171,7 @@ public class Cita {
     return alumno;
   }
 
-  public void setAlumno(Alumno Alumno) {
+  public void setAlumno(Alumno alumno) {
     this.alumno = alumno;
   }
 
@@ -289,7 +289,7 @@ public class Cita {
     sb.append("    fecha: ").append(toIndentedString(fecha)).append("\n");
     sb.append("    hora: ").append(toIndentedString(hora)).append("\n");
     sb.append("    idPsiquiatra: ").append(toIndentedString(idPsiquiatra)).append("\n");
-    sb.append("    Alumno: ").append(toIndentedString(alumno)).append("\n");
+    sb.append("    alumno: ").append(toIndentedString(alumno)).append("\n");
     sb.append("    motivoCita: ").append(toIndentedString(motivoCita)).append("\n");
     sb.append("    discapacidad: ").append(toIndentedString(discapacidad)).append("\n");
     sb.append("    comunidadIndigena: ").append(toIndentedString(comunidadIndigena)).append("\n");

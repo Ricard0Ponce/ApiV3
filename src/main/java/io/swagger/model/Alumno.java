@@ -36,6 +36,7 @@ import javax.persistence.Column;
 public class Alumno {
   @Id
   @JsonProperty("id")
+  // @NotBlank
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "alu_id")
   private Integer id = null;
