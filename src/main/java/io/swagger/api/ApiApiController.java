@@ -178,11 +178,12 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                // alumnoService.
-                return new ResponseEntity<List<AlumnoDTOid>>(objectMapper.readValue(
-                        "[ {\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"genero\" : \"genero\",\n  \"matricula\" : \"matricula\",\n  \"telefonoMovil\" : \"telefonoMovil\",\n  \"id\" : 0,\n  \"email\" : \"email\",\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n}, {\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"genero\" : \"genero\",\n  \"matricula\" : \"matricula\",\n  \"telefonoMovil\" : \"telefonoMovil\",\n  \"id\" : 0,\n  \"email\" : \"email\",\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n} ]",
-                        List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                List<AlumnoDTOid> alumnoList = alumnoService.getAllAlumnos();
+                if (alumnoList.isEmpty()) {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
+                return new ResponseEntity<>(alumnoList, HttpStatus.OK);
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<List<AlumnoDTOid>>(HttpStatus.INTERNAL_SERVER_ERROR);
             }

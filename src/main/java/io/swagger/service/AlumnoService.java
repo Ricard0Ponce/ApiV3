@@ -2,6 +2,8 @@ package io.swagger.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import io.swagger.model.Alumno;
 import io.swagger.model.AlumnoDTOLogin;
@@ -29,11 +31,20 @@ public class AlumnoService {
 
     public List<AlumnoDTOid> getAllAlumnos() {
         List<Alumno> alumnoList = alumnoRepository.findAll();
-        List<AlumnoDTOid> listaFinal;
+        List<AlumnoDTOid> listaFinal = new ArrayList<>();
         for (Alumno alumno : alumnoList) {
-            // listaFinal.add();
+            AlumnoDTOid varTemporal = new AlumnoDTOid();
+            varTemporal.setId(alumno.getId());
+            varTemporal.setMatricula(alumno.getMatricula());
+            varTemporal.setNombres(alumno.getNombres());
+            varTemporal.setApellidoPaterno(alumno.getApellidoPaterno());
+            varTemporal.setApellidoMaterno(alumno.getApellidoMaterno());
+            varTemporal.setGenero(alumno.getGenero());
+            varTemporal.setEmail(alumno.getEmail());
+            varTemporal.setTelefonoMovil(alumno.getTelefonoMovil());
+            listaFinal.add(varTemporal);
         }
-        return null;// alumnoRepository.findAll();
+        return listaFinal;
     }
 
     public AlumnoDTOLogin loginAlumno(AlumnosLoginBody aLogin) {
