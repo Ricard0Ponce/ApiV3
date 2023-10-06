@@ -43,14 +43,20 @@ public class Cita {
   @JsonProperty("hora")
   private String hora = null;
 
-  @Column(name = "cit_idpsiquiatra")
-  @JsonProperty("idPsiquiatra")
-  private Long idPsiquiatra = null;
+  // Aqui se hace la inyeccion de psiquiatra a citas
+  @ManyToOne
+  @JoinColumn(name = "psi_id")
+  @JsonIgnore
+  private Psiquiatra psiquiatra;
+  // private Long idPsiquiatra = null;
 
   @ManyToOne
   @JoinColumn(name = "alu_id") // Nombre de la columna de la llave foránea en la tabla Cita
   @JsonIgnore
   private Alumno alumno;
+
+  @JsonProperty("idPsiquiatra")
+  private Long idpsi;
 
   /*
    * @ManyToOne
@@ -135,8 +141,8 @@ public class Cita {
     this.hora = hora;
   }
 
-  public Cita idPsiquiatra(Long idPsiquiatra) {
-    this.idPsiquiatra = idPsiquiatra;
+  public Cita Psiquiatra(Psiquiatra psiquiatra) {
+    this.psiquiatra = psiquiatra;
     return this;
   }
 
@@ -147,12 +153,12 @@ public class Cita {
    **/
   @Schema(description = "")
 
-  public Long getIdPsiquiatra() {
-    return idPsiquiatra;
+  public Psiquiatra getPsiquiatra() {
+    return psiquiatra;
   }
 
-  public void setIdPsiquiatra(Long idPsiquiatra) {
-    this.idPsiquiatra = idPsiquiatra;
+  public void setPsiquiatra(Psiquiatra psiquiatra) {
+    this.psiquiatra = psiquiatra;
   }
 
   public Cita Alumno(Alumno alumno) {
@@ -267,7 +273,7 @@ public class Cita {
     return Objects.equals(this.id, cita.id) &&
         Objects.equals(this.fecha, cita.fecha) &&
         Objects.equals(this.hora, cita.hora) &&
-        Objects.equals(this.idPsiquiatra, cita.idPsiquiatra) &&
+        Objects.equals(this.psiquiatra, cita.psiquiatra) &&
         Objects.equals(this.alumno, cita.alumno) &&
         Objects.equals(this.motivoCita, cita.motivoCita) &&
         Objects.equals(this.discapacidad, cita.discapacidad) &&
@@ -277,7 +283,7 @@ public class Cita {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, fecha, hora, idPsiquiatra, alumno, motivoCita, discapacidad, comunidadIndigena, migrante);
+    return Objects.hash(id, fecha, hora, psiquiatra, alumno, motivoCita, discapacidad, comunidadIndigena, migrante);
   }
 
   @Override
@@ -288,7 +294,7 @@ public class Cita {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    fecha: ").append(toIndentedString(fecha)).append("\n");
     sb.append("    hora: ").append(toIndentedString(hora)).append("\n");
-    sb.append("    idPsiquiatra: ").append(toIndentedString(idPsiquiatra)).append("\n");
+    sb.append("    psiquiatra: ").append(toIndentedString(psiquiatra)).append("\n");
     sb.append("    alumno: ").append(toIndentedString(alumno)).append("\n");
     sb.append("    motivoCita: ").append(toIndentedString(motivoCita)).append("\n");
     sb.append("    discapacidad: ").append(toIndentedString(discapacidad)).append("\n");

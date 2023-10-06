@@ -22,6 +22,7 @@ import io.swagger.model.PsiquiatraDTO;
 import io.swagger.model.PsiquiatrasLoginBody;
 import io.swagger.service.AlumnoService;
 import io.swagger.service.CitaService;
+import io.swagger.service.PsiquiatraService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,13 +69,16 @@ public class ApiApiController implements ApiApi {
 
     private final CitaService citaService;
 
+    private final PsiquiatraService psiquiatraService;
+
     @org.springframework.beans.factory.annotation.Autowired
     public ApiApiController(ObjectMapper objectMapper, HttpServletRequest request, AlumnoService alumnoService,
-            CitaService citaService) {
+            CitaService citaService, PsiquiatraService psiquiatraService) {
         this.objectMapper = objectMapper;
         this.request = request;
         this.alumnoService = alumnoService;
         this.citaService = citaService;
+        this.psiquiatraService = psiquiatraService;
     }
 
     public ResponseEntity<AlumnoDTOLogin> createAlumno(
@@ -111,14 +115,15 @@ public class ApiApiController implements ApiApi {
         if (accept != null && accept.contains("application/json")) {
             try {
                 Integer i = Integer.valueOf(id.intValue()); // Pasa de Long a Integer
-                if (citaService.buscaID(i)) {
+                Long idPsi = body.getIdpsi(); // Manda el dato del alumno
+                if (citaService.buscaID(i, idPsi)) {
                     // Condicional para saber que el Alumno existe ante de hacer esto:
                     System.out.println("Se valido hasta la entrada de la creacion del objeto");
                     Cita citaf = new Cita();
                     citaf.setId(id); // Darle el valor del ID del alumno
                     citaf.setFecha(body.getFecha());
                     citaf.setHora(body.getHora());
-                    citaf.setIdPsiquiatra(body.getIdPsiquiatra());
+                    citaf.setIdpsi(idPsi);
                     citaf.setMotivoCita(body.getMotivoCita());
                     citaf.setDiscapacidad(body.getDiscapacidad());
                     citaf.setComunidadIndigena(body.getComunidadIndigena());
@@ -144,10 +149,14 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<PsiquiatraDTO>(objectMapper.readValue(
-                        "{\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"numTrabajador\" : \"numTrabajador\",\n  \"id\" : 0,\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n}",
-                        PsiquiatraDTO.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                if (body != null) {
+                    PsiquiatraDTO psi = psiquiatraService.createPsiquiatra(body);
+                    return new ResponseEntity<>(psi, HttpStatus.CREATED);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<PsiquiatraDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -196,10 +205,12 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<List<Cita>>(objectMapper.readValue(
-                        "[ {\n  \"migrante\" : true,\n  \"fecha\" : \"fecha\",\n  \"idAlumno\" : 1,\n  \"motivoCita\" : \"motivoCita\",\n  \"comunidadIndigena\" : true,\n  \"hora\" : \"hora\",\n  \"idPsiquiatra\" : 6,\n  \"discapacidad\" : true,\n  \"id\" : 0\n}, {\n  \"migrante\" : true,\n  \"fecha\" : \"fecha\",\n  \"idAlumno\" : 1,\n  \"motivoCita\" : \"motivoCita\",\n  \"comunidadIndigena\" : true,\n  \"hora\" : \"hora\",\n  \"idPsiquiatra\" : 6,\n  \"discapacidad\" : true,\n  \"id\" : 0\n} ]",
-                        List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                List<Cita> citaList = citaService.getAllCita();
+                if (citaList.isEmpty()) {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
+                return new ResponseEntity<>(citaList, HttpStatus.OK);
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<List<Cita>>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -224,21 +235,25 @@ public class ApiApiController implements ApiApi {
         return new ResponseEntity<List<PsiquiatraDTO>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<AlumnoDTOid> getAlumnoById(
-            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id) {
+    public ResponseEntity<AlumnoDTOid> getAlumnoById(@PathVariable("id") Long id) {
         String accept = request.getHeader("Accept");
+
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<AlumnoDTOid>(objectMapper.readValue(
-                        "{\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"genero\" : \"genero\",\n  \"matricula\" : \"matricula\",\n  \"telefonoMovil\" : \"telefonoMovil\",\n  \"id\" : 0,\n  \"email\" : \"email\",\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n}",
-                        AlumnoDTOid.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<AlumnoDTOid>(HttpStatus.INTERNAL_SERVER_ERROR);
+                AlumnoDTOid alumnoDTO = alumnoService.getAlumnoById(id);
+
+                if (alumnoDTO != null) {
+                    return new ResponseEntity<>(alumnoDTO, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
+                log.error("An error occurred", e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
-        return new ResponseEntity<AlumnoDTOid>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     public ResponseEntity<Cita> getCitaById(
@@ -263,10 +278,14 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<PsiquiatraDTO>(objectMapper.readValue(
-                        "{\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"numTrabajador\" : \"numTrabajador\",\n  \"id\" : 0,\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n}",
-                        PsiquiatraDTO.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                PsiquiatraDTO psi;
+                psi = psiquiatraService.loginPsiquiatra(body);
+                if (psi != null) {
+                    return new ResponseEntity<>(psi, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<PsiquiatraDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
             }

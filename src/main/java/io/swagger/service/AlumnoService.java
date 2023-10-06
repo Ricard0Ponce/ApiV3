@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import io.swagger.model.Alumno;
 import io.swagger.model.AlumnoDTOLogin;
 import io.swagger.model.AlumnoDTOid;
@@ -27,6 +28,28 @@ public class AlumnoService {
 
     public Alumno createAlumno(Alumno alumno) {
         return this.alumnoRepository.save(alumno);
+    }
+
+    public AlumnoDTOid getAlumnoById(Long id) {
+        Integer i = Integer.valueOf(id.intValue());
+        Optional<Alumno> buscarAlumno = alumnoRepository.findById(i);
+
+        if (buscarAlumno.isPresent()) {
+            Alumno alumnoB = buscarAlumno.get();
+            AlumnoDTOid alumnoDTO = new AlumnoDTOid();
+
+            alumnoDTO.setId(alumnoB.getId());
+            alumnoDTO.setMatricula(alumnoB.getMatricula());
+            alumnoDTO.setNombres(alumnoB.getNombres());
+            alumnoDTO.setApellidoPaterno(alumnoB.getApellidoPaterno());
+            alumnoDTO.setApellidoMaterno(alumnoB.getApellidoMaterno());
+            alumnoDTO.setEmail(alumnoB.getEmail());
+            alumnoDTO.setGenero(alumnoB.getGenero());
+            alumnoDTO.setTelefonoMovil(alumnoB.getTelefonoMovil());
+
+            return alumnoDTO;
+        }
+        return null;
     }
 
     public List<AlumnoDTOid> getAllAlumnos() {

@@ -3,11 +3,24 @@ package io.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.model.Cita;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -16,28 +29,39 @@ import javax.validation.constraints.*;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-03T21:32:08.208259185Z[GMT]")
-
-
-public class Psiquiatra   {
+@Entity // La clase se crea en una entidad
+@Table(name = "Psiquiatra") // Asigna nombre a la tabla.
+@Data // Crea Getters/Setter de la clase con Lombook
+public class Psiquiatra {
   @JsonProperty("id")
-  private Long id = null;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "psi_id")
+  private Long id;
 
+  @Column(name = "psi_numtrabajador")
   @JsonProperty("numTrabajador")
   private String numTrabajador = null;
 
+  @Column(name = "psi_password")
   @JsonProperty("password")
   private String password = null;
 
-  @JsonProperty("citas")
-  @Valid
+  // @Column(name = "psi_citas")
+  @OneToMany(mappedBy = "psiquiatra", cascade = CascadeType.ALL)
+  @JsonIgnore
+  // Aqui se hace la inyeccion de Psiquiatra a citas
   private List<Cita> citas = null;
 
+  @Column(name = "psi_nombres")
   @JsonProperty("nombres")
   private String nombres = null;
 
+  @Column(name = "psi_apellidopaterno")
   @JsonProperty("apellidoPaterno")
   private String apellidoPaterno = null;
 
+  @Column(name = "psi_apellidomaterno")
   @JsonProperty("apellidoMaterno")
   private String apellidoMaterno = null;
 
@@ -48,11 +72,12 @@ public class Psiquiatra   {
 
   /**
    * Get id
+   * 
    * @return id
    **/
   @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "")
-  
-    public Long getId() {
+
+  public Long getId() {
     return id;
   }
 
@@ -67,11 +92,13 @@ public class Psiquiatra   {
 
   /**
    * Get numTrabajador
+   * 
    * @return numTrabajador
    **/
   @Schema(description = "")
-  
-  @Size(min=10,max=10)   public String getNumTrabajador() {
+
+  @Size(min = 10, max = 10)
+  public String getNumTrabajador() {
     return numTrabajador;
   }
 
@@ -86,11 +113,12 @@ public class Psiquiatra   {
 
   /**
    * Get password
+   * 
    * @return password
    **/
   @Schema(description = "")
-  
-    public String getPassword() {
+
+  public String getPassword() {
     return password;
   }
 
@@ -113,11 +141,12 @@ public class Psiquiatra   {
 
   /**
    * Get citas
+   * 
    * @return citas
    **/
   @Schema(description = "")
-      @Valid
-    public List<Cita> getCitas() {
+  @Valid
+  public List<Cita> getCitas() {
     return citas;
   }
 
@@ -132,11 +161,12 @@ public class Psiquiatra   {
 
   /**
    * Get nombres
+   * 
    * @return nombres
    **/
   @Schema(description = "")
-  
-    public String getNombres() {
+
+  public String getNombres() {
     return nombres;
   }
 
@@ -151,11 +181,12 @@ public class Psiquiatra   {
 
   /**
    * Get apellidoPaterno
+   * 
    * @return apellidoPaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoPaterno() {
+
+  public String getApellidoPaterno() {
     return apellidoPaterno;
   }
 
@@ -170,18 +201,18 @@ public class Psiquiatra   {
 
   /**
    * Get apellidoMaterno
+   * 
    * @return apellidoMaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoMaterno() {
+
+  public String getApellidoMaterno() {
     return apellidoMaterno;
   }
 
   public void setApellidoMaterno(String apellidoMaterno) {
     this.apellidoMaterno = apellidoMaterno;
   }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -210,7 +241,7 @@ public class Psiquiatra   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Psiquiatra {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    numTrabajador: ").append(toIndentedString(numTrabajador)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
