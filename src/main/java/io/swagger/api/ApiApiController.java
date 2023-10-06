@@ -178,6 +178,7 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
+                // alumnoService.
                 return new ResponseEntity<List<AlumnoDTOid>>(objectMapper.readValue(
                         "[ {\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"genero\" : \"genero\",\n  \"matricula\" : \"matricula\",\n  \"telefonoMovil\" : \"telefonoMovil\",\n  \"id\" : 0,\n  \"email\" : \"email\",\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n}, {\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"genero\" : \"genero\",\n  \"matricula\" : \"matricula\",\n  \"telefonoMovil\" : \"telefonoMovil\",\n  \"id\" : 0,\n  \"email\" : \"email\",\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n} ]",
                         List.class), HttpStatus.NOT_IMPLEMENTED);
@@ -290,15 +291,21 @@ public class ApiApiController implements ApiApi {
         return new ResponseEntity<PsiquiatraDTO>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    // Permite acceder a un alumno al sistema con password y matricula
     public ResponseEntity<AlumnoDTOLogin> loginAlumno(
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody AlumnosLoginBody body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<AlumnoDTOLogin>(objectMapper.readValue(
-                        "{\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"matricula\" : \"matricula\",\n  \"id\" : 0,\n  \"nombre\" : \"nombre\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n}",
-                        AlumnoDTOLogin.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                // alumnoService.loginAlumno(body);
+                AlumnoDTOLogin alumno;
+                alumno = alumnoService.loginAlumno(body);
+                if (alumno != null) {
+                    System.out.println("Nombre del alumno: " + alumno.getNombre());
+                    return new ResponseEntity<>(alumno, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<AlumnoDTOLogin>(HttpStatus.INTERNAL_SERVER_ERROR);
             }

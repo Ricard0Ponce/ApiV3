@@ -2,9 +2,13 @@ package io.swagger.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 import io.swagger.model.Alumno;
+import io.swagger.model.AlumnoDTOLogin;
+import io.swagger.model.AlumnoDTOid;
+import io.swagger.model.AlumnosLoginBody;
 import io.swagger.data.repository.AlumnoRepository;
+import java.util.function.Consumer;
 
 @Service
 public class AlumnoService {
@@ -23,4 +27,37 @@ public class AlumnoService {
         return this.alumnoRepository.save(alumno);
     }
 
-}
+    public List<AlumnoDTOid> getAllAlumnos() {
+        List<Alumno> alumnoList = alumnoRepository.findAll();
+        List<AlumnoDTOid> listaFinal;
+        for (Alumno alumno : alumnoList) {
+            // listaFinal.add();
+        }
+        return null;// alumnoRepository.findAll();
+    }
+
+    public AlumnoDTOLogin loginAlumno(AlumnosLoginBody aLogin) {
+        boolean encontrado = false;
+        // Traer la lista y comparar con los elementos para ver si estan los datos
+        AlumnoDTOLogin alumnoFinal = new AlumnoDTOLogin();
+        List<Alumno> alumnoList = alumnoRepository.findAll();
+        for (Alumno alumno : alumnoList) {
+            // compareTo regresa entero, si es 0 quiere decir que son iguales
+            if (alumno.getMatricula().compareTo(aLogin.getMatricula()) == 0
+                    && alumno.getPassword().compareTo(aLogin.getPassword()) == 0) {
+                alumnoFinal.setNombre(alumno.getNombres());
+                alumnoFinal.setApellidoPaterno(alumno.getApellidoPaterno());
+                alumnoFinal.setApellidoMaterno(alumno.getApellidoMaterno());
+                alumnoFinal.setMatricula(alumno.getMatricula());
+                alumnoFinal.setId(alumno.getId());
+                encontrado = true;
+            }
+        }
+        if (encontrado == true) {
+            return alumnoFinal;
+        } else {
+            return null;
+        }
+    }// Termina metodo AlumnoDTOLogin
+
+}// Termina clase AlumnoService.
