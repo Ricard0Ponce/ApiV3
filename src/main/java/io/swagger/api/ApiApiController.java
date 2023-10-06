@@ -60,7 +60,7 @@ import java.util.Map;
 public class ApiApiController implements ApiApi {
 
     private static final Logger log = LoggerFactory.getLogger(ApiApiController.class);
-
+    //Se reliza la inyeccion de dependencias
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
