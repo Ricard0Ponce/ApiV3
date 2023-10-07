@@ -21,7 +21,6 @@ public class PsiquiatraService {
     // Creamos un alumno, faltan agregar condicionales
     public PsiquiatraDTO createPsiquiatra(Psiquiatra psiquiatra) {
         PsiquiatraDTO psiRes = new PsiquiatraDTO();
-        psiRes.setId(psiquiatra.getId());
         psiRes.setNombres(psiquiatra.getNombres());
         psiRes.setApellidoPaterno(psiquiatra.getApellidoPaterno());
         psiRes.setApellidoMaterno(psiquiatra.getApellidoMaterno());
@@ -38,7 +37,6 @@ public class PsiquiatraService {
         for (Psiquiatra psiquiatra : psiList) {
             if (psiquiatra.getNumTrabajador().compareTo(loginBody.getNumTrabajador()) == 0
                     && psiquiatra.getPassword().compareTo(loginBody.getPassword()) == 0) {
-                psiquiatraLogeado.setId(psiquiatra.getId());
                 psiquiatraLogeado.setNombres(psiquiatra.getNombres());
                 psiquiatraLogeado.setApellidoPaterno(psiquiatra.getApellidoPaterno());
                 psiquiatraLogeado.setApellidoMaterno(psiquiatra.getApellidoMaterno());

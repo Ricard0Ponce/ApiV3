@@ -31,19 +31,19 @@ public class CitaService {
     }
 
     // Agregamos un metodo para crear una cita
-    public Cita createCita(Cita cita, Long idLong) {
-        Integer idAlu = Integer.valueOf(idLong.intValue()); // Pasa de Long a Integer
-        Long idPsi = cita.getIdpsi();
+    public Cita createCita(Cita cita, String matricula) {
+        // Integer idAlu = Integer.valueOf(idLong.intValue()); // Pasa de Long a Integer
+        String numT = cita.getNumTrabajador();
         if (cita != null) {
             // System.out.println("Buscamos al alumno con el ID: " + i);
             // Optional<Alumno> optionalAlumno = alumnoRepository.findById(i);
-            if (buscaID(idAlu, idPsi)) {
-                Optional<Alumno> optionalAlumno = alumnoRepository.findById(idAlu);
+            if (buscaID(matricula, numT)) {
+                Optional<Alumno> optionalAlumno = alumnoRepository.findById(matricula);
                 Alumno alumno = optionalAlumno.get(); // Obtiene el objeto Alumno de Optional si está presente
-                Optional<Psiquiatra> optionalPsiquiatra = psiquiatraRepository.findById(idPsi);
+                Optional<Psiquiatra> optionalPsiquiatra = psiquiatraRepository.findById(numT);
                 Psiquiatra psiquiatra = optionalPsiquiatra.get();
                 // Realiza operaciones con el objeto Alumno
-                System.out.println("\nAl parecer se encontro al Alumno con el id:  " + alumno.getId());
+                System.out.println("\nAl parecer se encontro al Alumno con el id:  " + alumno.getMatricula());
                 System.out.println("\n El alumno tiene nombre: " + alumno.getNombres());
                 cita.setAlumno(alumno); // Se almacena la referencia del alumno
                 cita.setPsiquiatra(psiquiatra); // Se almacena la referencia del Psiquiatra
@@ -67,7 +67,7 @@ public class CitaService {
             varcitas.setId(cita.getId());
             varcitas.setFecha(cita.getFecha());
             varcitas.setHora(cita.getHora());
-            varcitas.setIdpsi(cita.getIdpsi());
+            varcitas.setNumTrabajador(cita.getNumTrabajador());
             varcitas.setMotivoCita(cita.getMotivoCita());
             varcitas.setDiscapacidad(cita.getDiscapacidad());
             varcitas.setComunidadIndigena(cita.getComunidadIndigena());
@@ -78,10 +78,10 @@ public class CitaService {
     }
 
     // Verifico si existe el alumno con el ID
-    public boolean buscaID(Integer idAlumno, Long idPsiquiatra) {
-        System.out.println("Buscamos al alumno con el ID: " + idAlumno);
-        Optional<Alumno> optionalAlumno = alumnoRepository.findById(idAlumno);
-        Optional<Psiquiatra> optionalPsiquiatra = psiquiatraRepository.findById(idPsiquiatra);
+    public boolean buscaID(String matricula, String NumTrabajador) {
+        System.out.println("Buscamos al alumno con el ID: " + matricula);
+        Optional<Alumno> optionalAlumno = alumnoRepository.findById(matricula);
+        Optional<Psiquiatra> optionalPsiquiatra = psiquiatraRepository.findById(NumTrabajador);
         if (optionalAlumno.isPresent() && optionalPsiquiatra.isPresent()) {
             return true;
         } else {

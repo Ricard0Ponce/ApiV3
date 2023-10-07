@@ -33,12 +33,7 @@ import javax.validation.constraints.*;
 @Table(name = "Psiquiatra") // Asigna nombre a la tabla.
 @Data // Crea Getters/Setter de la clase con Lombook
 public class Psiquiatra {
-  @JsonProperty("id")
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "psi_id")
-  private Long id;
-
   @Column(name = "psi_numtrabajador")
   @JsonProperty("numTrabajador")
   private String numTrabajador = null;
@@ -64,26 +59,6 @@ public class Psiquiatra {
   @Column(name = "psi_apellidomaterno")
   @JsonProperty("apellidoMaterno")
   private String apellidoMaterno = null;
-
-  public Psiquiatra id(Long id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   * 
-   * @return id
-   **/
-  @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "")
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public Psiquiatra numTrabajador(String numTrabajador) {
     this.numTrabajador = numTrabajador;
@@ -223,8 +198,7 @@ public class Psiquiatra {
       return false;
     }
     Psiquiatra psiquiatra = (Psiquiatra) o;
-    return Objects.equals(this.id, psiquiatra.id) &&
-        Objects.equals(this.numTrabajador, psiquiatra.numTrabajador) &&
+    return Objects.equals(this.numTrabajador, psiquiatra.numTrabajador) &&
         Objects.equals(this.password, psiquiatra.password) &&
         Objects.equals(this.citas, psiquiatra.citas) &&
         Objects.equals(this.nombres, psiquiatra.nombres) &&
@@ -234,7 +208,7 @@ public class Psiquiatra {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, numTrabajador, password, citas, nombres, apellidoPaterno, apellidoMaterno);
+    return Objects.hash(numTrabajador, password, citas, nombres, apellidoPaterno, apellidoMaterno);
   }
 
   @Override
@@ -242,7 +216,6 @@ public class Psiquiatra {
     StringBuilder sb = new StringBuilder();
     sb.append("class Psiquiatra {\n");
 
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    numTrabajador: ").append(toIndentedString(numTrabajador)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    citas: ").append(toIndentedString(citas)).append("\n");

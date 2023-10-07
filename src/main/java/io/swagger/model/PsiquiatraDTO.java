@@ -14,10 +14,7 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-03T21:32:08.208259185Z[GMT]")
 
-
-public class PsiquiatraDTO   {
-  @JsonProperty("id")
-  private Long id = null;
+public class PsiquiatraDTO {
 
   @JsonProperty("numTrabajador")
   private String numTrabajador = null;
@@ -31,25 +28,6 @@ public class PsiquiatraDTO   {
   @JsonProperty("apellidoMaterno")
   private String apellidoMaterno = null;
 
-  public PsiquiatraDTO id(Long id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "")
-  
-    public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
   public PsiquiatraDTO numTrabajador(String numTrabajador) {
     this.numTrabajador = numTrabajador;
     return this;
@@ -57,11 +35,13 @@ public class PsiquiatraDTO   {
 
   /**
    * Get numTrabajador
+   * 
    * @return numTrabajador
    **/
   @Schema(description = "")
-  
-  @Size(min=10,max=10)   public String getNumTrabajador() {
+
+  @Size(min = 10, max = 10)
+  public String getNumTrabajador() {
     return numTrabajador;
   }
 
@@ -76,11 +56,12 @@ public class PsiquiatraDTO   {
 
   /**
    * Get nombres
+   * 
    * @return nombres
    **/
   @Schema(description = "")
-  
-    public String getNombres() {
+
+  public String getNombres() {
     return nombres;
   }
 
@@ -95,11 +76,12 @@ public class PsiquiatraDTO   {
 
   /**
    * Get apellidoPaterno
+   * 
    * @return apellidoPaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoPaterno() {
+
+  public String getApellidoPaterno() {
     return apellidoPaterno;
   }
 
@@ -114,18 +96,18 @@ public class PsiquiatraDTO   {
 
   /**
    * Get apellidoMaterno
+   * 
    * @return apellidoMaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoMaterno() {
+
+  public String getApellidoMaterno() {
     return apellidoMaterno;
   }
 
   public void setApellidoMaterno(String apellidoMaterno) {
     this.apellidoMaterno = apellidoMaterno;
   }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -136,8 +118,7 @@ public class PsiquiatraDTO   {
       return false;
     }
     PsiquiatraDTO psiquiatraDTO = (PsiquiatraDTO) o;
-    return Objects.equals(this.id, psiquiatraDTO.id) &&
-        Objects.equals(this.numTrabajador, psiquiatraDTO.numTrabajador) &&
+    return Objects.equals(this.numTrabajador, psiquiatraDTO.numTrabajador) &&
         Objects.equals(this.nombres, psiquiatraDTO.nombres) &&
         Objects.equals(this.apellidoPaterno, psiquiatraDTO.apellidoPaterno) &&
         Objects.equals(this.apellidoMaterno, psiquiatraDTO.apellidoMaterno);
@@ -145,15 +126,14 @@ public class PsiquiatraDTO   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, numTrabajador, nombres, apellidoPaterno, apellidoMaterno);
+    return Objects.hash(numTrabajador, nombres, apellidoPaterno, apellidoMaterno);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PsiquiatraDTO {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+
     sb.append("    numTrabajador: ").append(toIndentedString(numTrabajador)).append("\n");
     sb.append("    nombres: ").append(toIndentedString(nombres)).append("\n");
     sb.append("    apellidoPaterno: ").append(toIndentedString(apellidoPaterno)).append("\n");

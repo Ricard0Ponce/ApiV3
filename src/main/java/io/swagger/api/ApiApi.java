@@ -72,10 +72,10 @@ public interface ApiApi {
                         @ApiResponse(responseCode = "201", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Cita.class))),
 
                         @ApiResponse(responseCode = "404", description = "No Content", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error404Cita.class))) })
-        @RequestMapping(value = "/api/alumnos/{id}/citas", produces = { "application/json" }, consumes = {
+        @RequestMapping(value = "/api/alumnos/{matricula}/citas", produces = { "application/json" }, consumes = {
                         "application/json" }, method = RequestMethod.POST)
         ResponseEntity<Cita> createCita(
-                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id,
+                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
                         @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Cita body);
 
         @Operation(summary = "Permite crear a un psiquiatra", description = "", tags = { "Psiquiatra" })
@@ -141,9 +141,10 @@ public interface ApiApi {
                         @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error404AlumnoID.class))),
 
                         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error500Alumno.class))) })
-        @RequestMapping(value = "/api/alumnos/{id}", produces = { "application/json" }, method = RequestMethod.GET)
-        ResponseEntity<AlumnoDTOid> getAlumnoById(
-                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id);
+        @RequestMapping(value = "/api/alumnos/{matricula}", produces = {
+                        "application/json" }, method = RequestMethod.GET)
+        ResponseEntity<AlumnoDTOid> getAlumnoByMatricula(
+                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula);
 
         @Operation(summary = "Regresa cita por id", description = "", tags = { "Citas" })
         @ApiResponses(value = {
@@ -177,9 +178,10 @@ public interface ApiApi {
                         @ApiResponse(responseCode = "404", description = "No se encontro la cita", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error404Psiquiatra.class))),
 
                         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error500Psiquiatra.class))) })
-        @RequestMapping(value = "/api/psiquiatras/{id}", produces = { "application/json" }, method = RequestMethod.GET)
-        ResponseEntity<PsiquiatraDTO> getPsiquiatraById(
-                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id);
+        @RequestMapping(value = "/api/psiquiatras/{NumTrabajador}", produces = {
+                        "application/json" }, method = RequestMethod.GET)
+        ResponseEntity<PsiquiatraDTO> getPsiquiatraByNumTrabajador(
+                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("NumTrabajador") String NumTrabajador);
 
         @Operation(summary = "Permite a un alumno iniciar sesion", description = "Permite a un alumno iniciar sesión proporcionando su matrícula y contraseña.", tags = {
                         "Alumnos" })

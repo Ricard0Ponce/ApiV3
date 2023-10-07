@@ -30,15 +30,13 @@ public class AlumnoService {
         return this.alumnoRepository.save(alumno);
     }
 
-    public AlumnoDTOid getAlumnoById(Long id) {
-        Integer i = Integer.valueOf(id.intValue());
-        Optional<Alumno> buscarAlumno = alumnoRepository.findById(i);
+    public AlumnoDTOid getAlumnoById(String matricula) {
+        Optional<Alumno> buscarAlumno = alumnoRepository.findById(matricula);
 
         if (buscarAlumno.isPresent()) {
             Alumno alumnoB = buscarAlumno.get();
             AlumnoDTOid alumnoDTO = new AlumnoDTOid();
 
-            alumnoDTO.setId(alumnoB.getId());
             alumnoDTO.setMatricula(alumnoB.getMatricula());
             alumnoDTO.setNombres(alumnoB.getNombres());
             alumnoDTO.setApellidoPaterno(alumnoB.getApellidoPaterno());
@@ -57,7 +55,6 @@ public class AlumnoService {
         List<AlumnoDTOid> listaFinal = new ArrayList<>();
         for (Alumno alumno : alumnoList) {
             AlumnoDTOid varTemporal = new AlumnoDTOid();
-            varTemporal.setId(alumno.getId());
             varTemporal.setMatricula(alumno.getMatricula());
             varTemporal.setNombres(alumno.getNombres());
             varTemporal.setApellidoPaterno(alumno.getApellidoPaterno());
@@ -83,7 +80,6 @@ public class AlumnoService {
                 alumnoFinal.setApellidoPaterno(alumno.getApellidoPaterno());
                 alumnoFinal.setApellidoMaterno(alumno.getApellidoMaterno());
                 alumnoFinal.setMatricula(alumno.getMatricula());
-                alumnoFinal.setId(alumno.getId());
                 encontrado = true;
             }
         }

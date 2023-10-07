@@ -55,8 +55,8 @@ public class Cita {
   @JsonIgnore
   private Alumno alumno;
 
-  @JsonProperty("idPsiquiatra")
-  private Long idpsi;
+  @JsonProperty("NumTrabajador")
+  private String NumTrabajador;
 
   /*
    * @ManyToOne
@@ -269,6 +269,7 @@ public class Cita {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
+    // String NumTrabajador
     Cita cita = (Cita) o;
     return Objects.equals(this.id, cita.id) &&
         Objects.equals(this.fecha, cita.fecha) &&
@@ -278,12 +279,14 @@ public class Cita {
         Objects.equals(this.motivoCita, cita.motivoCita) &&
         Objects.equals(this.discapacidad, cita.discapacidad) &&
         Objects.equals(this.comunidadIndigena, cita.comunidadIndigena) &&
+        Objects.equals(this.NumTrabajador, cita.NumTrabajador) &&
         Objects.equals(this.migrante, cita.migrante);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, fecha, hora, psiquiatra, alumno, motivoCita, discapacidad, comunidadIndigena, migrante);
+    return Objects.hash(id, fecha, hora, psiquiatra, alumno, motivoCita, discapacidad, comunidadIndigena, NumTrabajador,
+        migrante);
   }
 
   @Override
@@ -298,6 +301,7 @@ public class Cita {
     sb.append("    alumno: ").append(toIndentedString(alumno)).append("\n");
     sb.append("    motivoCita: ").append(toIndentedString(motivoCita)).append("\n");
     sb.append("    discapacidad: ").append(toIndentedString(discapacidad)).append("\n");
+    sb.append("    NumTrabajador: ").append(toIndentedString(NumTrabajador)).append("\n");
     sb.append("    comunidadIndigena: ").append(toIndentedString(comunidadIndigena)).append("\n");
     sb.append("    migrante: ").append(toIndentedString(migrante)).append("\n");
     sb.append("}");

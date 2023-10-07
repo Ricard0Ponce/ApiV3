@@ -60,7 +60,7 @@ import java.util.Map;
 public class ApiApiController implements ApiApi {
 
     private static final Logger log = LoggerFactory.getLogger(ApiApiController.class);
-    //Se reliza la inyeccion de dependencias
+    // Se reliza la inyeccion de dependencias
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
@@ -90,7 +90,6 @@ public class ApiApiController implements ApiApi {
                 Alumno alumno = alumnoService.createAlumno(body);
                 AlumnoDTOLogin alumnoDTOLogin = new AlumnoDTOLogin();
                 alumnoDTOLogin.setApellidoPaterno(body.getApellidoPaterno());
-                alumnoDTOLogin.setId(body.getId()); // No se si estoy esta bien
                 alumnoDTOLogin.setNombre(body.getNombres());
                 alumnoDTOLogin.setApellidoMaterno(body.getApellidoMaterno());
                 alumnoDTOLogin.setMatricula(body.getMatricula());
@@ -109,27 +108,27 @@ public class ApiApiController implements ApiApi {
     }
 
     public ResponseEntity<Cita> createCita(
-            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id,
+            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Cita body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                Integer i = Integer.valueOf(id.intValue()); // Pasa de Long a Integer
-                Long idPsi = body.getIdpsi(); // Manda el dato del alumno
-                if (citaService.buscaID(i, idPsi)) {
+                // Pasa de Long a Integer
+                String numTrabajador = body.getNumTrabajador(); // Manda el dato del alumno
+                if (citaService.buscaID(matricula, numTrabajador)) {
                     // Condicional para saber que el Alumno existe ante de hacer esto:
                     System.out.println("Se valido hasta la entrada de la creacion del objeto");
                     Cita citaf = new Cita();
-                    citaf.setId(id); // Darle el valor del ID del alumno
+                    // citaf.setId(id); // Darle el valor del ID del alumno
                     citaf.setFecha(body.getFecha());
                     citaf.setHora(body.getHora());
-                    citaf.setIdpsi(idPsi);
+                    citaf.setNumTrabajador(body.getNumTrabajador());
                     citaf.setMotivoCita(body.getMotivoCita());
                     citaf.setDiscapacidad(body.getDiscapacidad());
                     citaf.setComunidadIndigena(body.getComunidadIndigena());
                     citaf.setMigrante(body.getMigrante());
-                    System.out.println("Se almaceno la cita con el ID: " + id);
-                    citaService.createCita(body, id); // Se invoca el metodo para crear la cita
+                    System.out.println("Se almaceno la cita con el ID: " + matricula);
+                    citaService.createCita(body, matricula); // Se invoca el metodo para crear la cita
                     return new ResponseEntity<>(citaf, HttpStatus.CREATED);
                 } else {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -235,12 +234,12 @@ public class ApiApiController implements ApiApi {
         return new ResponseEntity<List<PsiquiatraDTO>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<AlumnoDTOid> getAlumnoById(@PathVariable("id") Long id) {
+    public ResponseEntity<AlumnoDTOid> getAlumnoByMatricula(@PathVariable("matricula") String matricula) {
         String accept = request.getHeader("Accept");
 
         if (accept != null && accept.contains("application/json")) {
             try {
-                AlumnoDTOid alumnoDTO = alumnoService.getAlumnoById(id);
+                AlumnoDTOid alumnoDTO = alumnoService.getAlumnoById(matricula);
 
                 if (alumnoDTO != null) {
                     return new ResponseEntity<>(alumnoDTO, HttpStatus.OK);
@@ -294,8 +293,8 @@ public class ApiApiController implements ApiApi {
         return new ResponseEntity<PsiquiatraDTO>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<PsiquiatraDTO> getPsiquiatraById(
-            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id) {
+    public ResponseEntity<PsiquiatraDTO> getPsiquiatraByNumTrabajador(
+            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("NumTrabajador") String NuumTrabajador) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {

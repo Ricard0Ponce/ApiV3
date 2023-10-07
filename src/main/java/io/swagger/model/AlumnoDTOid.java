@@ -14,10 +14,7 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-03T21:32:08.208259185Z[GMT]")
 
-
-public class AlumnoDTOid   {
-  @JsonProperty("id")
-  private Integer id = null;
+public class AlumnoDTOid {
 
   @JsonProperty("matricula")
   private String matricula = null;
@@ -40,25 +37,6 @@ public class AlumnoDTOid   {
   @JsonProperty("telefonoMovil")
   private String telefonoMovil = null;
 
-  public AlumnoDTOid id(Integer id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "")
-  
-    public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
   public AlumnoDTOid matricula(String matricula) {
     this.matricula = matricula;
     return this;
@@ -66,11 +44,13 @@ public class AlumnoDTOid   {
 
   /**
    * Get matricula
+   * 
    * @return matricula
    **/
   @Schema(description = "")
-  
-  @Size(min=10,max=10)   public String getMatricula() {
+
+  @Size(min = 10, max = 10)
+  public String getMatricula() {
     return matricula;
   }
 
@@ -85,11 +65,12 @@ public class AlumnoDTOid   {
 
   /**
    * Get nombres
+   * 
    * @return nombres
    **/
   @Schema(description = "")
-  
-    public String getNombres() {
+
+  public String getNombres() {
     return nombres;
   }
 
@@ -104,11 +85,12 @@ public class AlumnoDTOid   {
 
   /**
    * Get apellidoPaterno
+   * 
    * @return apellidoPaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoPaterno() {
+
+  public String getApellidoPaterno() {
     return apellidoPaterno;
   }
 
@@ -123,11 +105,12 @@ public class AlumnoDTOid   {
 
   /**
    * Get apellidoMaterno
+   * 
    * @return apellidoMaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoMaterno() {
+
+  public String getApellidoMaterno() {
     return apellidoMaterno;
   }
 
@@ -142,11 +125,12 @@ public class AlumnoDTOid   {
 
   /**
    * Get email
+   * 
    * @return email
    **/
   @Schema(description = "")
-  
-    public String getEmail() {
+
+  public String getEmail() {
     return email;
   }
 
@@ -161,11 +145,12 @@ public class AlumnoDTOid   {
 
   /**
    * Get genero
+   * 
    * @return genero
    **/
   @Schema(description = "")
-  
-    public String getGenero() {
+
+  public String getGenero() {
     return genero;
   }
 
@@ -180,18 +165,18 @@ public class AlumnoDTOid   {
 
   /**
    * Get telefonoMovil
+   * 
    * @return telefonoMovil
    **/
   @Schema(description = "")
-  
-    public String getTelefonoMovil() {
+
+  public String getTelefonoMovil() {
     return telefonoMovil;
   }
 
   public void setTelefonoMovil(String telefonoMovil) {
     this.telefonoMovil = telefonoMovil;
   }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -202,8 +187,7 @@ public class AlumnoDTOid   {
       return false;
     }
     AlumnoDTOid alumnoDTOid = (AlumnoDTOid) o;
-    return Objects.equals(this.id, alumnoDTOid.id) &&
-        Objects.equals(this.matricula, alumnoDTOid.matricula) &&
+    return Objects.equals(this.matricula, alumnoDTOid.matricula) &&
         Objects.equals(this.nombres, alumnoDTOid.nombres) &&
         Objects.equals(this.apellidoPaterno, alumnoDTOid.apellidoPaterno) &&
         Objects.equals(this.apellidoMaterno, alumnoDTOid.apellidoMaterno) &&
@@ -214,15 +198,14 @@ public class AlumnoDTOid   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, matricula, nombres, apellidoPaterno, apellidoMaterno, email, genero, telefonoMovil);
+    return Objects.hash(matricula, nombres, apellidoPaterno, apellidoMaterno, email, genero, telefonoMovil);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlumnoDTOid {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+
     sb.append("    matricula: ").append(toIndentedString(matricula)).append("\n");
     sb.append("    nombres: ").append(toIndentedString(nombres)).append("\n");
     sb.append("    apellidoPaterno: ").append(toIndentedString(apellidoPaterno)).append("\n");

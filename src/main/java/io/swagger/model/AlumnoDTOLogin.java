@@ -14,10 +14,7 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-03T21:32:08.208259185Z[GMT]")
 
-
-public class AlumnoDTOLogin   {
-  @JsonProperty("id")
-  private Integer id = null;
+public class AlumnoDTOLogin {
 
   @JsonProperty("matricula")
   private String matricula = null;
@@ -31,25 +28,6 @@ public class AlumnoDTOLogin   {
   @JsonProperty("apellidoMaterno")
   private String apellidoMaterno = null;
 
-  public AlumnoDTOLogin id(Integer id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "")
-  
-    public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
   public AlumnoDTOLogin matricula(String matricula) {
     this.matricula = matricula;
     return this;
@@ -57,11 +35,13 @@ public class AlumnoDTOLogin   {
 
   /**
    * Get matricula
+   * 
    * @return matricula
    **/
   @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "")
-  
-  @Size(min=10,max=10)   public String getMatricula() {
+
+  @Size(min = 10, max = 10)
+  public String getMatricula() {
     return matricula;
   }
 
@@ -76,11 +56,12 @@ public class AlumnoDTOLogin   {
 
   /**
    * Get nombre
+   * 
    * @return nombre
    **/
   @Schema(description = "")
-  
-    public String getNombre() {
+
+  public String getNombre() {
     return nombre;
   }
 
@@ -95,11 +76,12 @@ public class AlumnoDTOLogin   {
 
   /**
    * Get apellidoPaterno
+   * 
    * @return apellidoPaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoPaterno() {
+
+  public String getApellidoPaterno() {
     return apellidoPaterno;
   }
 
@@ -114,18 +96,18 @@ public class AlumnoDTOLogin   {
 
   /**
    * Get apellidoMaterno
+   * 
    * @return apellidoMaterno
    **/
   @Schema(description = "")
-  
-    public String getApellidoMaterno() {
+
+  public String getApellidoMaterno() {
     return apellidoMaterno;
   }
 
   public void setApellidoMaterno(String apellidoMaterno) {
     this.apellidoMaterno = apellidoMaterno;
   }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -136,8 +118,7 @@ public class AlumnoDTOLogin   {
       return false;
     }
     AlumnoDTOLogin alumnoDTOLogin = (AlumnoDTOLogin) o;
-    return Objects.equals(this.id, alumnoDTOLogin.id) &&
-        Objects.equals(this.matricula, alumnoDTOLogin.matricula) &&
+    return Objects.equals(this.matricula, alumnoDTOLogin.matricula) &&
         Objects.equals(this.nombre, alumnoDTOLogin.nombre) &&
         Objects.equals(this.apellidoPaterno, alumnoDTOLogin.apellidoPaterno) &&
         Objects.equals(this.apellidoMaterno, alumnoDTOLogin.apellidoMaterno);
@@ -145,15 +126,14 @@ public class AlumnoDTOLogin   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, matricula, nombre, apellidoPaterno, apellidoMaterno);
+    return Objects.hash(matricula, nombre, apellidoPaterno, apellidoMaterno);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AlumnoDTOLogin {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+
     sb.append("    matricula: ").append(toIndentedString(matricula)).append("\n");
     sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
     sb.append("    apellidoPaterno: ").append(toIndentedString(apellidoPaterno)).append("\n");

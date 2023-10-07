@@ -35,12 +35,6 @@ import javax.persistence.Column;
 @Data // Crea Getters/Setter de la clase con Lombook
 public class Alumno {
   @Id
-  @JsonProperty("id")
-  // @NotBlank
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "alu_id")
-  private Integer id = null;
-
   @Column(name = "alu_matricula")
   @JsonProperty("matricula")
   private String matricula = null;
@@ -48,17 +42,7 @@ public class Alumno {
   @Column(name = "alu_password")
   @JsonProperty("password")
   private String password = null;
-  /*
-   * @JsonProperty("citas")
-   * 
-   * @Valid
-   * 
-   * @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
-   * // @OneToMany(mappedBy = "alumno", cascade =
-   * // CascadeType.ALL)
-   * private List<Cita> citas = null;
-   */
-  // Si pones JsonIgnore no lo agrega al mapping
+
   @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
   @JsonIgnore // Para evitar la serialización recursiva si usas Jackson
   private List<Cita> citas = new ArrayList<>();
@@ -86,26 +70,6 @@ public class Alumno {
   @Column(name = "alu_telefonomovil")
   @JsonProperty("telefonoMovil")
   private String telefonoMovil = null;
-
-  public Alumno id(Integer id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get id
-   * 
-   * @return id
-   **/
-  @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "")
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
 
   public Alumno matricula(String matricula) {
     this.matricula = matricula;
@@ -305,8 +269,7 @@ public class Alumno {
       return false;
     }
     Alumno alumno = (Alumno) o;
-    return Objects.equals(this.id, alumno.id) &&
-        Objects.equals(this.matricula, alumno.matricula) &&
+    return Objects.equals(this.matricula, alumno.matricula) &&
         Objects.equals(this.password, alumno.password) &&
         Objects.equals(this.citas, alumno.citas) &&
         Objects.equals(this.nombres, alumno.nombres) &&
@@ -319,7 +282,7 @@ public class Alumno {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, matricula, password, citas, nombres, apellidoPaterno, apellidoMaterno, email, genero,
+    return Objects.hash(matricula, password, citas, nombres, apellidoPaterno, apellidoMaterno, email, genero,
         telefonoMovil);
   }
 
@@ -328,7 +291,6 @@ public class Alumno {
     StringBuilder sb = new StringBuilder();
     sb.append("class Alumno {\n");
 
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    matricula: ").append(toIndentedString(matricula)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    citas: ").append(toIndentedString(citas)).append("\n");
