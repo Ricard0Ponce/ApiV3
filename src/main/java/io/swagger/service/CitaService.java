@@ -89,4 +89,44 @@ public class CitaService {
             return false;
         }
     }
+
+    public boolean deleteCita(String matricula, long idCita) {
+        List<Cita> citasList = citaRepository.findAll();
+        for (Cita cita : citasList) {
+            if (cita.getAlumno().getMatricula().compareTo(matricula) == 0
+                    && cita.getId().compareTo(idCita) == 0) {
+                System.out.println("Se encontro al alumno con matricula " +
+                        matricula + " cuyo id de cita a eliminar es: " + idCita);
+                citaRepository.deleteById(idCita); // Elimina la cita
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Obtiene una cita dada una matricula y su ID de cita.
+    public Cita getCitaById(String matricula, Long idCita) {
+        List<Cita> citasList = citaRepository.findAll();
+        Cita res = new Cita();
+        for (Cita cita : citasList) {
+            if (cita.getAlumno().getMatricula().compareTo(matricula) == 0
+                    && cita.getId().compareTo(idCita) == 0) {
+                return res = cita; // La cita encontrada es igual al alumno.
+            }
+        }
+        return null;
+    }
+
+    public Cita updateByCita(Cita citaEdit, String matricula, Long idCita) {
+        List<Cita> citasList = citaRepository.findAll();
+        for (Cita cita : citasList) {
+            if (cita.getAlumno().getMatricula().compareTo(matricula) == 0
+                    && cita.getId().compareTo(idCita) == 0) {
+                citaRepository.save(citaEdit); // El problema es que no se accede al ID y crea otro.
+                return citaEdit;
+
+            }
+        }
+        return null;
+    }
 }

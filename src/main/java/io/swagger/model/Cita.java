@@ -30,10 +30,13 @@ import javax.validation.constraints.*;
 @Data // Crea Getters/Setter de la clase con Lombook
 public class Cita {
   @Id
-  @JsonProperty("id")
+  @JsonIgnore
   @GeneratedValue(strategy = GenerationType.IDENTITY) // Genera su propia llave
   @Column(name = "cit_id")
   private Long id; // ID De la cita
+
+  @JsonProperty("NumTrabajador")
+  private String NumTrabajador;
 
   @Column(name = "cit_fecha")
   @JsonProperty("fecha")
@@ -43,27 +46,6 @@ public class Cita {
   @JsonProperty("hora")
   private String hora = null;
 
-  // Aqui se hace la inyeccion de psiquiatra a citas
-  @ManyToOne
-  @JoinColumn(name = "psi_id")
-  @JsonIgnore
-  private Psiquiatra psiquiatra;
-  // private Long idPsiquiatra = null;
-
-  @ManyToOne
-  @JoinColumn(name = "alu_id") // Nombre de la columna de la llave foránea en la tabla Cita
-  @JsonIgnore
-  private Alumno alumno;
-
-  @JsonProperty("NumTrabajador")
-  private String NumTrabajador;
-
-  /*
-   * @ManyToOne
-   * 
-   * @JsonProperty("idAlumno") // Potencialmente aqui va la relacion
-   * private Integer idAlumno = null; // Se cambio a Integer
-   */
   @Column(name = "cit_motivocita")
   @JsonProperty("motivoCita")
   private String motivoCita = null;
@@ -79,6 +61,18 @@ public class Cita {
   @Column(name = "cit_migrante")
   @JsonProperty("migrante")
   private Boolean migrante = null;
+
+  // Se crea la relacion entre cita y Psiquiatra
+  @ManyToOne
+  @JoinColumn(name = "psi_id")
+  @JsonIgnore
+  private Psiquiatra psiquiatra;
+
+  // Se hace la relacion entre Cita y Alumno
+  @ManyToOne
+  @JoinColumn(name = "alu_id")
+  @JsonIgnore
+  private Alumno alumno;
 
   public Cita id(Long id) {
     this.id = id;

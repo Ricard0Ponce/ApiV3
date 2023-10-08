@@ -97,10 +97,11 @@ public interface ApiApi {
                         @ApiResponse(responseCode = "404", description = "No Content", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error404CitaID.class))),
 
                         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error500Cita.class))) })
-        @RequestMapping(value = "/api/alumnos/{id}/citas/{id}", produces = {
+        @RequestMapping(value = "/api/alumnos/{matricula}/citas/{id}", produces = {
                         "application/json" }, method = RequestMethod.DELETE)
         ResponseEntity<Model204CitaDelete> deleteCitaById(
-                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id);
+                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
+                        @PathVariable("id") Long id);
 
         @Operation(summary = "Regresa la lista de todos los alumnos", description = "Regresa todos los Alumnos", tags = {
                         "Alumnos" })
@@ -133,7 +134,7 @@ public interface ApiApi {
         @RequestMapping(value = "/api/psiquiatras", produces = { "application/json" }, method = RequestMethod.GET)
         ResponseEntity<List<PsiquiatraDTO>> getAllPsiquiatras();
 
-        @Operation(summary = "Regresa un Alumno por id", description = "Regresa al alumno con el id especificado.", tags = {
+        @Operation(summary = "Regresa un Alumno por su matricula", description = "Regresa al alumno con la matricula especificada.", tags = {
                         "Alumnos" })
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlumnoDTOid.class))),
@@ -153,10 +154,11 @@ public interface ApiApi {
                         @ApiResponse(responseCode = "404", description = "No se encontro la cita", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error404CitaID.class))),
 
                         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error500Cita.class))) })
-        @RequestMapping(value = "/api/alumnos/{id}/citas/{id}", produces = {
+        @RequestMapping(value = "/api/alumnos/{matricula}/citas/{id}", produces = {
                         "application/json" }, method = RequestMethod.GET)
         ResponseEntity<Cita> getCitaById(
-                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id);
+                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
+                        @PathVariable("id") Long id);
 
         @Operation(summary = "Permite a un psiquiatra iniciar sesion", description = "Obtiene un objeto especificando Numero de trabajador y password. La respuesta es un psicologo con sus atributos", tags = {
                         "Psiquiatra" })
@@ -171,7 +173,8 @@ public interface ApiApi {
         ResponseEntity<PsiquiatraDTO> getLoginPsicologo(
                         @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody PsiquiatrasLoginBody body);
 
-        @Operation(summary = "Regresa un Psiquiatra por id", description = "", tags = { "Psiquiatra" })
+        @Operation(summary = "Regresa un Psiquiatra por numero de trabajador", description = "", tags = {
+                        "Psiquiatra" })
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PsiquiatraDTO.class))),
 
@@ -205,10 +208,11 @@ public interface ApiApi {
                         @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error404CitaID.class))),
 
                         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error500Cita.class))) })
-        @RequestMapping(value = "/api/alumnos/{id}/citas/{id}", produces = { "application/json" }, consumes = {
+        @RequestMapping(value = "/api/alumnos/{matricula}/citas/{id}", produces = { "application/json" }, consumes = {
                         "application/json" }, method = RequestMethod.PUT)
         ResponseEntity<Cita> updateCitaById(
-                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id,
+                        @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
+                        @PathVariable("id") Long id,
                         @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Cita body);
 
 }

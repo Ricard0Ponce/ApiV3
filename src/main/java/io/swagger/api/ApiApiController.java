@@ -165,15 +165,18 @@ public class ApiApiController implements ApiApi {
     }
 
     public ResponseEntity<Model204CitaDelete> deleteCitaById(
-            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id) {
+            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
+            @PathVariable("id") Long id) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<Model204CitaDelete>(
-                        objectMapper.readValue("{\n  \"description\" : \"El elemento fue eliminado Exitosamente\"\n}",
-                                Model204CitaDelete.class),
-                        HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                boolean find = citaService.deleteCita(matricula, id);
+                if (find) {
+                    return new ResponseEntity<>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<Model204CitaDelete>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -222,10 +225,12 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<List<PsiquiatraDTO>>(objectMapper.readValue(
-                        "[ {\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"numTrabajador\" : \"numTrabajador\",\n  \"id\" : 0,\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n}, {\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"numTrabajador\" : \"numTrabajador\",\n  \"id\" : 0,\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n} ]",
-                        List.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                List<PsiquiatraDTO> psiList = psiquiatraService.getAllPsiquiatras();
+                if (psiList.isEmpty()) {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
+                return new ResponseEntity<>(psiList, HttpStatus.OK);
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<List<PsiquiatraDTO>>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -256,14 +261,18 @@ public class ApiApiController implements ApiApi {
     }
 
     public ResponseEntity<Cita> getCitaById(
-            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id) {
+            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
+            @PathVariable("id") Long id) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<Cita>(objectMapper.readValue(
-                        "{\n  \"migrante\" : true,\n  \"fecha\" : \"fecha\",\n  \"idAlumno\" : 1,\n  \"motivoCita\" : \"motivoCita\",\n  \"comunidadIndigena\" : true,\n  \"hora\" : \"hora\",\n  \"idPsiquiatra\" : 6,\n  \"discapacidad\" : true,\n  \"id\" : 0\n}",
-                        Cita.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                Cita resp = citaService.getCitaById(matricula, id);
+                if (resp != null) {
+                    return new ResponseEntity<>(resp, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<Cita>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -298,10 +307,14 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<PsiquiatraDTO>(objectMapper.readValue(
-                        "{\n  \"apellidoPaterno\" : \"apellidoPaterno\",\n  \"numTrabajador\" : \"numTrabajador\",\n  \"id\" : 0,\n  \"nombres\" : \"nombres\",\n  \"apellidoMaterno\" : \"apellidoMaterno\"\n}",
-                        PsiquiatraDTO.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                PsiquiatraDTO psiquiatraDTO = psiquiatraService.getPsiquiatraByNumTrabajador(NuumTrabajador);
+
+                if (psiquiatraDTO != null) {
+                    return new ResponseEntity<>(psiquiatraDTO, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<PsiquiatraDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -333,21 +346,25 @@ public class ApiApiController implements ApiApi {
         return new ResponseEntity<AlumnoDTOLogin>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    // Actualiza una CITA por medio del ID
     public ResponseEntity<Cita> updateCitaById(
-            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("id") Long id,
+            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
+            @PathVariable("id") Long id,
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Cita body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<Cita>(objectMapper.readValue(
-                        "{\n  \"migrante\" : true,\n  \"fecha\" : \"fecha\",\n  \"idAlumno\" : 1,\n  \"motivoCita\" : \"motivoCita\",\n  \"comunidadIndigena\" : true,\n  \"hora\" : \"hora\",\n  \"idPsiquiatra\" : 6,\n  \"discapacidad\" : true,\n  \"id\" : 0\n}",
-                        Cita.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                Cita resp = citaService.updateByCita(body, matricula, id);
+                if (resp != null) {
+                    return new ResponseEntity<>(resp, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<Cita>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-
         return new ResponseEntity<Cita>(HttpStatus.NOT_IMPLEMENTED);
     }
 

@@ -3,6 +3,8 @@ package io.swagger.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
+import java.util.ArrayList;
 import io.swagger.data.repository.PsiquiatraRepository;
 import io.swagger.model.Psiquiatra;
 import io.swagger.model.PsiquiatraDTO;
@@ -18,7 +20,25 @@ public class PsiquiatraService {
         this.psiquiatraRepository = psiquiatraRepository;
     }
 
-    // Creamos un alumno, faltan agregar condicionales
+    // Buscamos a un Psiquiatra mediante tu num. de trabajador
+    public PsiquiatraDTO getPsiquiatraByNumTrabajador(String NumTrabajador) {
+        Optional<Psiquiatra> buscarPsi = psiquiatraRepository.findById(NumTrabajador);
+
+        if (buscarPsi.isPresent()) {
+            Psiquiatra psiB = buscarPsi.get();
+            PsiquiatraDTO psiDTO = new PsiquiatraDTO();
+
+            psiDTO.setNumTrabajador(psiB.getNumTrabajador());
+            psiDTO.setNombres(psiB.getNombres());
+            psiDTO.setApellidoPaterno(psiB.getApellidoPaterno());
+            psiDTO.setApellidoMaterno(psiB.getApellidoMaterno());
+
+            return psiDTO;
+        }
+        return null;
+    }
+
+    // Creamos un Psiquiatra, faltan agregar condicionales
     public PsiquiatraDTO createPsiquiatra(Psiquiatra psiquiatra) {
         PsiquiatraDTO psiRes = new PsiquiatraDTO();
         psiRes.setNombres(psiquiatra.getNombres());
@@ -27,6 +47,21 @@ public class PsiquiatraService {
         psiRes.setNumTrabajador(psiquiatra.getNumTrabajador());
         psiquiatraRepository.save(psiquiatra);
         return psiRes;
+    }
+
+    // Permite regresar la lista de psiquiatras
+    public List<PsiquiatraDTO> getAllPsiquiatras() {
+        List<Psiquiatra> psiList = psiquiatraRepository.findAll();
+        List<PsiquiatraDTO> listaFinal = new ArrayList<>();
+        for (Psiquiatra psi : psiList) {
+            PsiquiatraDTO varPsi = new PsiquiatraDTO();
+            varPsi.setNumTrabajador(psi.getNumTrabajador());
+            varPsi.setNombres(psi.getNombres());
+            varPsi.setApellidoPaterno(psi.getApellidoPaterno());
+            varPsi.setApellidoMaterno(psi.getApellidoMaterno());
+            listaFinal.add(varPsi);
+        }
+        return listaFinal;
     }
 
     // Permite a un Psiquiatra iniciar sesion.
