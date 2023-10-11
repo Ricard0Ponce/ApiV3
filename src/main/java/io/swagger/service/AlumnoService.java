@@ -42,7 +42,7 @@ public class AlumnoService {
             AlumnoDTOid alumnoDTO = new AlumnoDTOid();
 
             alumnoDTO.setMatricula(alumnoB.getMatricula());
-            alumnoDTO.setNombre(alumnoB.getNombre());
+            alumnoDTO.setNombres(alumnoB.getNombres());
             alumnoDTO.setApellidoPaterno(alumnoB.getApellidoPaterno());
             alumnoDTO.setApellidoMaterno(alumnoB.getApellidoMaterno());
             alumnoDTO.setEmail(alumnoB.getEmail());
@@ -59,7 +59,7 @@ public class AlumnoService {
         for (Alumno alumno : alumnoList) {
             AlumnoDTOid varTemporal = new AlumnoDTOid();
             varTemporal.setMatricula(alumno.getMatricula());
-            varTemporal.setNombre(alumno.getNombre());
+            varTemporal.setNombres(alumno.getNombres());
             varTemporal.setApellidoPaterno(alumno.getApellidoPaterno());
             varTemporal.setApellidoMaterno(alumno.getApellidoMaterno());
             varTemporal.setGenero(alumno.getGenero());
@@ -79,7 +79,7 @@ public class AlumnoService {
             // compareTo regresa entero, si es 0 quiere decir que son iguales
             if (alumno.getMatricula().compareTo(aLogin.getMatricula()) == 0
                     && alumno.getPassword().compareTo(aLogin.getPassword()) == 0) {
-                alumnoFinal.setNombre(alumno.getNombre());
+                alumnoFinal.setNombres(alumno.getNombres());
                 alumnoFinal.setApellidoPaterno(alumno.getApellidoPaterno());
                 alumnoFinal.setApellidoMaterno(alumno.getApellidoMaterno());
                 alumnoFinal.setMatricula(alumno.getMatricula());

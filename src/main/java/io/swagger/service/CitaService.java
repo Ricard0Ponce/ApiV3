@@ -44,10 +44,10 @@ public class CitaService {
                 Psiquiatra psiquiatra = optionalPsiquiatra.get();
                 // Realiza operaciones con el objeto Alumno
                 System.out.println("\nAl parecer se encontro al Alumno con el id:  " + alumno.getMatricula());
-                System.out.println("\n El alumno tiene nombre: " + alumno.getNombre());
+                System.out.println("\n El alumno tiene nombre: " + alumno.getNombres());
                 cita.setAlumno(alumno); // Se almacena la referencia del alumno
                 cita.setPsiquiatra(psiquiatra); // Se almacena la referencia del Psiquiatra
-                System.out.println("Corroborandp la info, en cita se tiene: " + cita.getAlumno().getNombre() +
+                System.out.println("Corroborandp la info, en cita se tiene: " + cita.getAlumno().getNombres() +
                         "\n Ese es el nombre del alumno");
                 return this.citaRepository.save(cita);
             } else {

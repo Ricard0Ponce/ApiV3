@@ -93,13 +93,12 @@ public class ApiApiController implements ApiApi {
                     err.description("El alumno no ha podido ser creado exitosamente");
                     return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
                 } else {
-                    System.out.println("Se valido hasta la entrada de la creacion del objeto");
                     AlumnoDTOLogin alumnoDTOLogin = new AlumnoDTOLogin();
                     alumnoDTOLogin.setApellidoPaterno(body.getApellidoPaterno());
-                    alumnoDTOLogin.setNombre(body.getNombre());
+                    alumnoDTOLogin.setNombres(body.getNombres());
                     alumnoDTOLogin.setApellidoMaterno(body.getApellidoMaterno());
                     alumnoDTOLogin.setMatricula(body.getMatricula());
-                    System.out.println("Se almaceno el alumno con nombre: " + alumno.getNombre());
+                    System.out.println("Se almaceno el alumno con nombre: " + alumno.getNombres());
                     return new ResponseEntity<>(alumnoDTOLogin, HttpStatus.CREATED);
                 }
             } catch (Exception e) {
@@ -382,7 +381,7 @@ public class ApiApiController implements ApiApi {
                 AlumnoDTOLogin alumno;
                 alumno = alumnoService.loginAlumno(body);
                 if (alumno != null) {
-                    System.out.println("Nombre del alumno: " + alumno.getNombre());
+                    System.out.println("Nombre del alumno: " + alumno.getNombres());
                     return new ResponseEntity<>(alumno, HttpStatus.OK);
                 }
                 Error404AlumnoID err = new Error404AlumnoID();

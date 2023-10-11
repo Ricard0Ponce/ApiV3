@@ -47,9 +47,9 @@ public class Alumno {
   @JsonIgnore // Para evitar la serialización recursiva si usas Jackson
   private List<Cita> citas = new ArrayList<>();
 
-  @Column(name = "alu_nombre")
-  @JsonProperty("nombre")
-  private String nombre = null;
+  @Column(name = "alu_nombres")
+  @JsonProperty("nombres")
+  private String nombres = null;
 
   @Column(name = "alu_apellidopaterno")
   @JsonProperty("apellidoPaterno")
@@ -140,8 +140,8 @@ public class Alumno {
     this.citas = citas;
   }
 
-  public Alumno nombre(String nombre) {
-    this.nombre = nombre;
+  public Alumno nombres(String nombres) {
+    this.nombres = nombres;
     return this;
   }
 
@@ -152,12 +152,12 @@ public class Alumno {
    **/
   @Schema(description = "")
 
-  public String getNombre() {
-    return nombre;
+  public String getNombres() {
+    return nombres;
   }
 
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
+  public void setNombres(String nombres) {
+    this.nombres = nombres;
   }
 
   public Alumno apellidoPaterno(String apellidoPaterno) {
@@ -272,7 +272,7 @@ public class Alumno {
     return Objects.equals(this.matricula, alumno.matricula) &&
         Objects.equals(this.password, alumno.password) &&
         Objects.equals(this.citas, alumno.citas) &&
-        Objects.equals(this.nombre, alumno.nombre) &&
+        Objects.equals(this.nombres, alumno.nombres) &&
         Objects.equals(this.apellidoPaterno, alumno.apellidoPaterno) &&
         Objects.equals(this.apellidoMaterno, alumno.apellidoMaterno) &&
         Objects.equals(this.email, alumno.email) &&
@@ -282,7 +282,7 @@ public class Alumno {
 
   @Override
   public int hashCode() {
-    return Objects.hash(matricula, password, citas, nombre, apellidoPaterno, apellidoMaterno, email, genero,
+    return Objects.hash(matricula, password, citas, nombres, apellidoPaterno, apellidoMaterno, email, genero,
         telefonoMovil);
   }
 
@@ -294,7 +294,7 @@ public class Alumno {
     sb.append("    matricula: ").append(toIndentedString(matricula)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    citas: ").append(toIndentedString(citas)).append("\n");
-    sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
+    sb.append("    nombres: ").append(toIndentedString(nombres)).append("\n");
     sb.append("    apellidoPaterno: ").append(toIndentedString(apellidoPaterno)).append("\n");
     sb.append("    apellidoMaterno: ").append(toIndentedString(apellidoMaterno)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");

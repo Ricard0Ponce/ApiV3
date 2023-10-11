@@ -19,8 +19,8 @@ public class AlumnoDTOLogin {
   @JsonProperty("matricula")
   private String matricula = null;
 
-  @JsonProperty("nombre")
-  private String nombre = null;
+  @JsonProperty("nombres")
+  private String nombres = null;
 
   @JsonProperty("apellidoPaterno")
   private String apellidoPaterno = null;
@@ -49,8 +49,8 @@ public class AlumnoDTOLogin {
     this.matricula = matricula;
   }
 
-  public AlumnoDTOLogin nombre(String nombre) {
-    this.nombre = nombre;
+  public AlumnoDTOLogin nombres(String nombres) {
+    this.nombres = nombres;
     return this;
   }
 
@@ -61,12 +61,12 @@ public class AlumnoDTOLogin {
    **/
   @Schema(description = "")
 
-  public String getNombre() {
-    return nombre;
+  public String getNombres() {
+    return nombres;
   }
 
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
+  public void setNombres(String nombres) {
+    this.nombres = nombres;
   }
 
   public AlumnoDTOLogin apellidoPaterno(String apellidoPaterno) {
@@ -119,14 +119,14 @@ public class AlumnoDTOLogin {
     }
     AlumnoDTOLogin alumnoDTOLogin = (AlumnoDTOLogin) o;
     return Objects.equals(this.matricula, alumnoDTOLogin.matricula) &&
-        Objects.equals(this.nombre, alumnoDTOLogin.nombre) &&
+        Objects.equals(this.nombres, alumnoDTOLogin.nombres) &&
         Objects.equals(this.apellidoPaterno, alumnoDTOLogin.apellidoPaterno) &&
         Objects.equals(this.apellidoMaterno, alumnoDTOLogin.apellidoMaterno);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(matricula, nombre, apellidoPaterno, apellidoMaterno);
+    return Objects.hash(matricula, nombres, apellidoPaterno, apellidoMaterno);
   }
 
   @Override
@@ -135,7 +135,7 @@ public class AlumnoDTOLogin {
     sb.append("class AlumnoDTOLogin {\n");
 
     sb.append("    matricula: ").append(toIndentedString(matricula)).append("\n");
-    sb.append("    nombre: ").append(toIndentedString(nombre)).append("\n");
+    sb.append("    nombres: ").append(toIndentedString(nombres)).append("\n");
     sb.append("    apellidoPaterno: ").append(toIndentedString(apellidoPaterno)).append("\n");
     sb.append("    apellidoMaterno: ").append(toIndentedString(apellidoMaterno)).append("\n");
     sb.append("}");
