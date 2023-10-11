@@ -14,8 +14,7 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-03T21:32:08.208259185Z[GMT]")
 
-
-public class Error204Cita   {
+public class Error204Cita {
   @JsonProperty("description")
   private String description = null;
 
@@ -26,18 +25,18 @@ public class Error204Cita   {
 
   /**
    * error message
+   * 
    * @return description
    **/
   @Schema(example = "Las citas no fueron encontradas", description = "error message")
-  
-    public String getDescription() {
+
+  public String getDescription() {
     return description;
   }
 
   public void setDescription(String description) {
     this.description = description;
   }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -60,7 +59,7 @@ public class Error204Cita   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Error204Cita {\n");
-    
+
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("}");
     return sb.toString();

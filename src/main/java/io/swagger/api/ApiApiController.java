@@ -81,25 +81,33 @@ public class ApiApiController implements ApiApi {
         this.psiquiatraService = psiquiatraService;
     }
 
-    public ResponseEntity<AlumnoDTOLogin> createAlumno(
+    public ResponseEntity<?> createAlumno(
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Alumno body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                System.out.println("Se valido hasta la entrada de la creacion del objeto");
                 Alumno alumno = alumnoService.createAlumno(body);
-                AlumnoDTOLogin alumnoDTOLogin = new AlumnoDTOLogin();
-                alumnoDTOLogin.setApellidoPaterno(body.getApellidoPaterno());
-                alumnoDTOLogin.setNombre(body.getNombres());
-                alumnoDTOLogin.setApellidoMaterno(body.getApellidoMaterno());
-                alumnoDTOLogin.setMatricula(body.getMatricula());
-                System.out.println("Se almaceno el alumno con nombre: " + alumno.getNombres());
-                return new ResponseEntity<>(alumnoDTOLogin, HttpStatus.CREATED);
-
+                if (alumno == null) {
+                    System.out.println("El usuario no pudo ser creado correctamente ");
+                    Error204Alumno err = new Error204Alumno(); // Aqui va error403AlumnoID
+                    err.description("El alumno no ha podido ser creado exitosamente");
+                    return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+                } else {
+                    System.out.println("Se valido hasta la entrada de la creacion del objeto");
+                    AlumnoDTOLogin alumnoDTOLogin = new AlumnoDTOLogin();
+                    alumnoDTOLogin.setApellidoPaterno(body.getApellidoPaterno());
+                    alumnoDTOLogin.setNombre(body.getNombre());
+                    alumnoDTOLogin.setApellidoMaterno(body.getApellidoMaterno());
+                    alumnoDTOLogin.setMatricula(body.getMatricula());
+                    System.out.println("Se almaceno el alumno con nombre: " + alumno.getNombre());
+                    return new ResponseEntity<>(alumnoDTOLogin, HttpStatus.CREATED);
+                }
             } catch (Exception e) {
                 System.out.println("A sucedido un error");
+                Error500Alumno err = new Error500Alumno();
+                err.description("Ha sucedido un error en el servidor");
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
         }
@@ -107,7 +115,7 @@ public class ApiApiController implements ApiApi {
         return new ResponseEntity<AlumnoDTOLogin>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Cita> createCita(
+    public ResponseEntity<?> createCita(
             @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Cita body) {
         String accept = request.getHeader("Accept");
@@ -131,40 +139,47 @@ public class ApiApiController implements ApiApi {
                     citaService.createCita(body, matricula); // Se invoca el metodo para crear la cita
                     return new ResponseEntity<>(citaf, HttpStatus.CREATED);
                 } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    Error404Cita err = new Error404Cita();
+                    err.description("La cita no ha podido ser creada exitosamente");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 System.out.println("A sucedido un error");
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Cita>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Cita err = new Error500Cita();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-
         return new ResponseEntity<Cita>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<PsiquiatraDTO> createPsiquiatra(
+    public ResponseEntity<?> createPsiquiatra(
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Psiquiatra body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                if (body != null) {
-                    PsiquiatraDTO psi = psiquiatraService.createPsiquiatra(body);
-                    return new ResponseEntity<>(psi, HttpStatus.CREATED);
+                PsiquiatraDTO psi = psiquiatraService.createPsiquiatra(body);
+                if (psi == null) {
+                    Error204Psiquiatra err = new Error204Psiquiatra();
+                    err.setDescription("La cuenta del psiquiatra no ha podido ser creada");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(psi, HttpStatus.CREATED);
                 }
 
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<PsiquiatraDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Psiquiatra err = new Error500Psiquiatra();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
         return new ResponseEntity<PsiquiatraDTO>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Model204CitaDelete> deleteCitaById(
+    public ResponseEntity<?> deleteCitaById(
             @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
             @PathVariable("id") Long id) {
         String accept = request.getHeader("Accept");
@@ -174,72 +189,90 @@ public class ApiApiController implements ApiApi {
                 if (find) {
                     return new ResponseEntity<>(HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    Error204Psiquiatra err = new Error204Psiquiatra();
+                    err.description("La cita no ha podido ser eliminado debido a que no ha sido encontrado");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Model204CitaDelete>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Cita err = new Error500Cita();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
         return new ResponseEntity<Model204CitaDelete>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<List<AlumnoDTOid>> getAllAlumnos() {
+    public ResponseEntity<?> getAllAlumnos() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
                 List<AlumnoDTOid> alumnoList = alumnoService.getAllAlumnos();
                 if (alumnoList.isEmpty()) {
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                    Error204Alumno err = new Error204Alumno();
+                    System.out.println("No se cargo la lista de Alumnos");
+                    err.description("No se ha podido cargar la lista de alumnos");
+                    return new ResponseEntity<>(err, HttpStatus.NO_CONTENT);
+                    // return ResponseEntity.status(HttpStatus.NO_CONTENT).body(err);
                 }
                 return new ResponseEntity<>(alumnoList, HttpStatus.OK);
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<AlumnoDTOid>>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Alumno err = new Error500Alumno();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
         return new ResponseEntity<List<AlumnoDTOid>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<List<Cita>> getAllCita() {
+    public ResponseEntity<?> getAllCita() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
                 List<Cita> citaList = citaService.getAllCita();
                 if (citaList.isEmpty()) {
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                    Error204Cita err = new Error204Cita();
+                    err.description("No se han encontrado las citas");
+                    return new ResponseEntity<>(err, HttpStatus.NO_CONTENT);
                 }
                 return new ResponseEntity<>(citaList, HttpStatus.OK);
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<Cita>>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Cita err = new Error500Cita();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
         return new ResponseEntity<List<Cita>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<List<PsiquiatraDTO>> getAllPsiquiatras() {
+    public ResponseEntity<?> getAllPsiquiatras() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
                 List<PsiquiatraDTO> psiList = psiquiatraService.getAllPsiquiatras();
                 if (psiList.isEmpty()) {
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                    Error204Psiquiatra err = new Error204Psiquiatra();
+                    err.description("No se ha encontrado la lista de Psiquiatras");
+                    return new ResponseEntity<>(err, HttpStatus.NO_CONTENT);
                 }
                 return new ResponseEntity<>(psiList, HttpStatus.OK);
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<PsiquiatraDTO>>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Psiquiatra err = new Error500Psiquiatra();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
         return new ResponseEntity<List<PsiquiatraDTO>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<AlumnoDTOid> getAlumnoByMatricula(@PathVariable("matricula") String matricula) {
+    public ResponseEntity<?> getAlumnoByMatricula(@PathVariable("matricula") String matricula) {
         String accept = request.getHeader("Accept");
 
         if (accept != null && accept.contains("application/json")) {
@@ -249,18 +282,22 @@ public class ApiApiController implements ApiApi {
                 if (alumnoDTO != null) {
                     return new ResponseEntity<>(alumnoDTO, HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    Error404AlumnoID err = new Error404AlumnoID();
+                    err.description("No se ha encontrado al alumno con esa matricula");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 log.error("An error occurred", e);
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Alumno err = new Error500Alumno();
+                err.description("Ha sucedido un error con el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Cita> getCitaById(
+    public ResponseEntity<?> getCitaById(
             @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
             @PathVariable("id") Long id) {
         String accept = request.getHeader("Accept");
@@ -270,18 +307,22 @@ public class ApiApiController implements ApiApi {
                 if (resp != null) {
                     return new ResponseEntity<>(resp, HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    Error404Cita err = new Error404Cita();
+                    err.description("No se ha encontrado la cita con ese ID");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Cita>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Cita err = new Error500Cita();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
         return new ResponseEntity<Cita>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<PsiquiatraDTO> getLoginPsicologo(
+    public ResponseEntity<?> getLoginPsicologo(
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody PsiquiatrasLoginBody body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -291,18 +332,22 @@ public class ApiApiController implements ApiApi {
                 if (psi != null) {
                     return new ResponseEntity<>(psi, HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    Error404Psiquiatra err = new Error404Psiquiatra();
+                    err.description("No se ha podido logear debido a un error");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<PsiquiatraDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Psiquiatra err = new Error500Psiquiatra();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
         return new ResponseEntity<PsiquiatraDTO>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<PsiquiatraDTO> getPsiquiatraByNumTrabajador(
+    public ResponseEntity<?> getPsiquiatraByNumTrabajador(
             @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("NumTrabajador") String NuumTrabajador) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -312,11 +357,15 @@ public class ApiApiController implements ApiApi {
                 if (psiquiatraDTO != null) {
                     return new ResponseEntity<>(psiquiatraDTO, HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    Error404AlumnoID err = new Error404AlumnoID();
+                    err.description("No se ha encontrado al Psiquiatra");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<PsiquiatraDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Psiquiatra err = new Error500Psiquiatra();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -324,7 +373,7 @@ public class ApiApiController implements ApiApi {
     }
 
     // Permite acceder a un alumno al sistema con password y matricula
-    public ResponseEntity<AlumnoDTOLogin> loginAlumno(
+    public ResponseEntity<?> loginAlumno(
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody AlumnosLoginBody body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -336,10 +385,14 @@ public class ApiApiController implements ApiApi {
                     System.out.println("Nombre del alumno: " + alumno.getNombre());
                     return new ResponseEntity<>(alumno, HttpStatus.OK);
                 }
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                Error404AlumnoID err = new Error404AlumnoID();
+                err.description("No se ha podido iniciar sesion, verifique los datos que esta ingresando");
+                return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<AlumnoDTOLogin>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Alumno err = new Error500Alumno();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -347,7 +400,7 @@ public class ApiApiController implements ApiApi {
     }
 
     // Actualiza una CITA por medio del ID
-    public ResponseEntity<Cita> updateCitaById(
+    public ResponseEntity<?> updateCitaById(
             @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("matricula") String matricula,
             @PathVariable("id") Long id,
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Cita body) {
@@ -358,11 +411,15 @@ public class ApiApiController implements ApiApi {
                 if (resp != null) {
                     return new ResponseEntity<>(resp, HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    Error404CitaID err = new Error404CitaID();
+                    err.description("No se han podido actualizar los datos, verifica tus datos");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Cita>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error500Cita err = new Error500Cita();
+                err.description("Ha sucedido un error en el servidor");
+                return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         return new ResponseEntity<Cita>(HttpStatus.NOT_IMPLEMENTED);

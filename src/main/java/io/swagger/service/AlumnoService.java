@@ -27,24 +27,27 @@ public class AlumnoService {
     }
 
     public Alumno createAlumno(Alumno alumno) {
-        return this.alumnoRepository.save(alumno);
+        if (alumnoRepository.existsById(alumno.getMatricula())) {
+            System.out.println("\nEl alumno ya fue creado anteriomente");
+            return null;
+        } else {
+            return this.alumnoRepository.save(alumno);
+        }
     }
 
     public AlumnoDTOid getAlumnoById(String matricula) {
         Optional<Alumno> buscarAlumno = alumnoRepository.findById(matricula);
-
         if (buscarAlumno.isPresent()) {
             Alumno alumnoB = buscarAlumno.get();
             AlumnoDTOid alumnoDTO = new AlumnoDTOid();
 
             alumnoDTO.setMatricula(alumnoB.getMatricula());
-            alumnoDTO.setNombres(alumnoB.getNombres());
+            alumnoDTO.setNombre(alumnoB.getNombre());
             alumnoDTO.setApellidoPaterno(alumnoB.getApellidoPaterno());
             alumnoDTO.setApellidoMaterno(alumnoB.getApellidoMaterno());
             alumnoDTO.setEmail(alumnoB.getEmail());
             alumnoDTO.setGenero(alumnoB.getGenero());
             alumnoDTO.setTelefonoMovil(alumnoB.getTelefonoMovil());
-
             return alumnoDTO;
         }
         return null;
@@ -56,7 +59,7 @@ public class AlumnoService {
         for (Alumno alumno : alumnoList) {
             AlumnoDTOid varTemporal = new AlumnoDTOid();
             varTemporal.setMatricula(alumno.getMatricula());
-            varTemporal.setNombres(alumno.getNombres());
+            varTemporal.setNombre(alumno.getNombre());
             varTemporal.setApellidoPaterno(alumno.getApellidoPaterno());
             varTemporal.setApellidoMaterno(alumno.getApellidoMaterno());
             varTemporal.setGenero(alumno.getGenero());
@@ -76,7 +79,7 @@ public class AlumnoService {
             // compareTo regresa entero, si es 0 quiere decir que son iguales
             if (alumno.getMatricula().compareTo(aLogin.getMatricula()) == 0
                     && alumno.getPassword().compareTo(aLogin.getPassword()) == 0) {
-                alumnoFinal.setNombre(alumno.getNombres());
+                alumnoFinal.setNombre(alumno.getNombre());
                 alumnoFinal.setApellidoPaterno(alumno.getApellidoPaterno());
                 alumnoFinal.setApellidoMaterno(alumno.getApellidoMaterno());
                 alumnoFinal.setMatricula(alumno.getMatricula());

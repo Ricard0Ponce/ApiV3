@@ -40,13 +40,17 @@ public class PsiquiatraService {
 
     // Creamos un Psiquiatra, faltan agregar condicionales
     public PsiquiatraDTO createPsiquiatra(Psiquiatra psiquiatra) {
-        PsiquiatraDTO psiRes = new PsiquiatraDTO();
-        psiRes.setNombres(psiquiatra.getNombres());
-        psiRes.setApellidoPaterno(psiquiatra.getApellidoPaterno());
-        psiRes.setApellidoMaterno(psiquiatra.getApellidoMaterno());
-        psiRes.setNumTrabajador(psiquiatra.getNumTrabajador());
-        psiquiatraRepository.save(psiquiatra);
-        return psiRes;
+        if (psiquiatraRepository.existsById(psiquiatra.getNumTrabajador())) {
+            return null;
+        } else {
+            PsiquiatraDTO psiRes = new PsiquiatraDTO();
+            psiRes.setNombres(psiquiatra.getNombres());
+            psiRes.setApellidoPaterno(psiquiatra.getApellidoPaterno());
+            psiRes.setApellidoMaterno(psiquiatra.getApellidoMaterno());
+            psiRes.setNumTrabajador(psiquiatra.getNumTrabajador());
+            psiquiatraRepository.save(psiquiatra);
+            return psiRes;
+        }
     }
 
     // Permite regresar la lista de psiquiatras
