@@ -38,6 +38,21 @@
                     </execution>
                 </executions>
             </plugin>
+            <artifactId>dockerfile-maven-plugin</artifactId>
+            <version>1.4.13</version>
+            <executions>
+                <execution>
+                    <id>default</id>
+                    <goals>
+                        <goal>build</goal>
+                        <goal>push</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <repository>${docker.image}</repository>
+                <tag>${project.version}</tag>
+        </configuration>
         </plugins>
     </build>
     <dependencies>

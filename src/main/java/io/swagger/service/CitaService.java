@@ -11,6 +11,10 @@ import io.swagger.model.Cita;
 import io.swagger.model.Psiquiatra;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import java.util.Optional;
 
@@ -38,6 +42,7 @@ public class CitaService {
             // System.out.println("Buscamos al alumno con el ID: " + i);
             // Optional<Alumno> optionalAlumno = alumnoRepository.findById(i);
             if (buscaID(matricula, numT)) {
+                String fechaBody = cita.getFecha();
                 Optional<Alumno> optionalAlumno = alumnoRepository.findById(matricula);
                 Alumno alumno = optionalAlumno.get(); // Obtiene el objeto Alumno de Optional si está presente
                 Optional<Psiquiatra> optionalPsiquiatra = psiquiatraRepository.findById(numT);
@@ -47,8 +52,7 @@ public class CitaService {
                 System.out.println("\n El alumno tiene nombre: " + alumno.getNombres());
                 cita.setAlumno(alumno); // Se almacena la referencia del alumno
                 cita.setPsiquiatra(psiquiatra); // Se almacena la referencia del Psiquiatra
-                System.out.println("Corroborandp la info, en cita se tiene: " + cita.getAlumno().getNombres() +
-                        "\n Ese es el nombre del alumno");
+
                 return this.citaRepository.save(cita);
             } else {
                 // No se encontró un Alumno con el ID proporcionado
@@ -79,6 +83,15 @@ public class CitaService {
 
     // Verifico si existe el alumno con el ID
     public boolean buscaID(String matricula, String NumTrabajador) {
+        // Obtén la fecha actual
+        Date fechaActual = new Date();
+        // Crea un objeto SimpleDateFormat con el formato deseado
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        // Formatea la fecha actual utilizando el formato
+        String fechaFormateada = formato.format(fechaActual);
+        // Imprime la fecha formateada
+        System.out.println("La fecha del dia de hoy es: " + fechaFormateada);
+        /////////////////////////////////////////////////////////////
         System.out.println("Buscamos al alumno con el ID: " + matricula);
         Optional<Alumno> optionalAlumno = alumnoRepository.findById(matricula);
         Optional<Psiquiatra> optionalPsiquiatra = psiquiatraRepository.findById(NumTrabajador);
@@ -128,5 +141,29 @@ public class CitaService {
             }
         }
         return null;
+    }
+
+    public boolean validandoFormatoFecha(String fechaBody) {
+        // Define el patrón de formato para la cadena
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // Intenta convertir la cadena en un objeto LocalDate
+        try {
+            LocalDate fecha = LocalDate.parse(fechaBody, formatter);
+            System.out.println("La Fecha recibida es: " + fecha);
+            return true;
+        } catch (java.time.format.DateTimeParseException e) {
+            System.out.println("La cadena no tiene el formato adecuado.");
+            return false;
+        }
+        /*
+         * Date fechaActual = new Date();
+         * // Crea un objeto SimpleDateFormat con el formato deseado
+         * SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+         * // Formatea la fecha actual utilizando el formato
+         * String fechaFormateada = formato.format(fechaActual);
+         * // Imprime la fecha formateada
+         * System.out.println("La fecha del dia de hoy es: " + fechaFormateada);
+         * /////////////////////////////////////////////////////////////
+         */
     }
 }
