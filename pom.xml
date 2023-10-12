@@ -4,7 +4,7 @@
     <artifactId>swagger-spring</artifactId>
     <packaging>jar</packaging>
     <name>swagger-spring</name>
-    <version>1.0.0</version>
+    <version>3.8.1</version>
     <properties>
         <java.version>1.7</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -38,21 +38,25 @@
                     </execution>
                 </executions>
             </plugin>
+        <plugin>    
+        <groupId>com.spotify</groupId>
             <artifactId>dockerfile-maven-plugin</artifactId>
             <version>1.4.13</version>
-            <executions>
+                <executions>
                 <execution>
-                    <id>default</id>
+                <id>default</id>
                     <goals>
-                        <goal>build</goal>
-                        <goal>push</goal>
-                    </goals>
-                </execution>
+                <goal>build</goal>
+                <goal>push</goal>
+            </goals>
+            </execution>
             </executions>
             <configuration>
-                <repository>${docker.image}</repository>
-                <tag>${project.version}</tag>
-        </configuration>
+            <repository>apiv3</repository>
+            <tag>${project.v3}</tag>
+             </configuration>
+        </plugin>
+
         </plugins>
     </build>
     <dependencies>
@@ -88,6 +92,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+            <version>1.18.22</version> <!-- Utiliza la última versión disponible -->
 			<optional>true</optional>
 		</dependency>
 
