@@ -122,7 +122,7 @@ public class ApiApiController implements ApiApi {
             try {
                 // Pasa de Long a Integer
                 String numTrabajador = body.getNumTrabajador(); // Manda el dato del alumno
-                if (citaService.buscaID(matricula, numTrabajador)) {
+                if (citaService.buscaID(matricula, numTrabajador) && citaService.validaFechaCita(body.getFecha())) {
                     // Condicional para saber que el Alumno existe ante de hacer esto:
                     System.out.println("Se valido hasta la entrada de la creacion del objeto");
                     Cita citaf = new Cita();
@@ -135,7 +135,6 @@ public class ApiApiController implements ApiApi {
                     citaf.setComunidadIndigena(body.getComunidadIndigena());
                     citaf.setMigrante(body.getMigrante());
                     System.out.println("Se almaceno la cita con el ID: " + matricula);
-                    citaService.createCita(body, matricula); // Se invoca el metodo para crear la cita
                     return new ResponseEntity<>(citaf, HttpStatus.CREATED);
                 } else {
                     Error404Cita err = new Error404Cita();

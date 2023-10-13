@@ -3,6 +3,7 @@ package io.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +19,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import javax.validation.constraints.*;
 
 /**
@@ -38,9 +42,21 @@ public class Cita {
   @JsonProperty("NumTrabajador")
   private String NumTrabajador;
 
+  // Getter y Setter para fecha
+
+  @JsonIgnore // Ignora este método al serializar
+  public String getFormattedFecha() {
+    if (fecha != null) {
+      return fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    } else {
+      return null; // O un valor predeterminado según sea necesario
+    }
+  }
+
   @Column(name = "cit_fecha")
   @JsonProperty("fecha")
-  private String fecha = null;
+  @JsonFormat(pattern = "dd/MM/yyyy") // Añade esta línea con el patrón deseado
+  private LocalDate fecha = null;
 
   @Column(name = "cit_hora")
   @JsonProperty("hora")
@@ -94,7 +110,7 @@ public class Cita {
     this.id = id;
   }
 
-  public Cita fecha(String fecha) {
+  public Cita fecha(LocalDate fecha) {
     this.fecha = fecha;
     return this;
   }
@@ -106,12 +122,12 @@ public class Cita {
    **/
   @Schema(description = "")
 
-  @Pattern(regexp = "^\\d{2}/\\d{2}/\\d{4}$")
-  public String getFecha() {
+  // @Pattern(regexp = "dd/MM/yyyy")
+  public LocalDate getFecha() {
     return fecha;
   }
 
-  public void setFecha(String fecha) {
+  public void setFecha(LocalDate fecha) {
     this.fecha = fecha;
   }
 

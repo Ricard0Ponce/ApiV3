@@ -38,11 +38,12 @@ public class CitaService {
     public Cita createCita(Cita cita, String matricula) {
         // Integer idAlu = Integer.valueOf(idLong.intValue()); // Pasa de Long a Integer
         String numT = cita.getNumTrabajador();
+        LocalDate fechaBody = cita.getFecha();
         if (cita != null) {
             // System.out.println("Buscamos al alumno con el ID: " + i);
             // Optional<Alumno> optionalAlumno = alumnoRepository.findById(i);
-            if (buscaID(matricula, numT)) {
-                String fechaBody = cita.getFecha();
+            if (buscaID(matricula, numT) && validaFechaCita(fechaBody)) {
+                // String fechaBody = cita.getFecha();
                 Optional<Alumno> optionalAlumno = alumnoRepository.findById(matricula);
                 Alumno alumno = optionalAlumno.get(); // Obtiene el objeto Alumno de Optional si está presente
                 Optional<Psiquiatra> optionalPsiquiatra = psiquiatraRepository.findById(numT);
@@ -52,7 +53,6 @@ public class CitaService {
                 System.out.println("\n El alumno tiene nombre: " + alumno.getNombres());
                 cita.setAlumno(alumno); // Se almacena la referencia del alumno
                 cita.setPsiquiatra(psiquiatra); // Se almacena la referencia del Psiquiatra
-
                 return this.citaRepository.save(cita);
             } else {
                 // No se encontró un Alumno con el ID proporcionado
@@ -143,27 +143,51 @@ public class CitaService {
         return null;
     }
 
-    public boolean validandoFormatoFecha(String fechaBody) {
-        // Define el patrón de formato para la cadena
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        // Intenta convertir la cadena en un objeto LocalDate
+    // Se valida que la fecha este escrita en el formato correcto.
+    /*
+     * public boolean validandoFormatoFecha(String fechaBody) {
+     * // Define el patrón de formato para la cadena
+     * DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+     * // Intenta convertir la cadena en un objeto LocalDate
+     * try {
+     * LocalDate fecha = LocalDate.parse(fechaBody, formatter);
+     * System.out.println("La Fecha recibida es: " + fecha);
+     * return true;
+     * } catch (java.time.format.DateTimeParseException e) {
+     * System.out.println("La cadena no tiene el formato adecuado.");
+     * return false;
+     * }
+     * }
+     */
+
+    // Validamos que la fecha
+    public boolean validaFechaCita(LocalDate fechaBody) {
         try {
-            LocalDate fecha = LocalDate.parse(fechaBody, formatter);
-            System.out.println("La Fecha recibida es: " + fecha);
-            return true;
-        } catch (java.time.format.DateTimeParseException e) {
-            System.out.println("La cadena no tiene el formato adecuado.");
-            return false;
+            // Creamos un elemento con la fecha actual
+            LocalDate fechaActual = LocalDate.now();
+            System.out.println("La fecha del dia de hoy es: " + fechaActual);
+            if (fechaBody.isBefore(fechaActual)) {
+                System.out.println("Se dio una fecha que invalida, debido a que ese dia ya paso");
+                return false;
+            } else {
+                if (fechaDisponible(fechaBody)) {
+                    System.out.println("Se dio una fecha valida.");
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("A sucedido un error");
         }
-        /*
-         * Date fechaActual = new Date();
-         * // Crea un objeto SimpleDateFormat con el formato deseado
-         * SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-         * // Formatea la fecha actual utilizando el formato
-         * String fechaFormateada = formato.format(fechaActual);
-         * // Imprime la fecha formateada
-         * System.out.println("La fecha del dia de hoy es: " + fechaFormateada);
-         * /////////////////////////////////////////////////////////////
-         */
+        return true;
+    }
+
+    public boolean fechaDisponible(LocalDate fechaBody) {
+        for (Cita cita : citaRepository.findAll()) {
+            if (cita.getFecha().compareTo(fechaBody) == 0) {
+                System.out.println("Fecha disponible");
+                return true;
+            }
+        }
+        return false;
     }
 }
