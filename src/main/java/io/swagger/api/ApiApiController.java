@@ -134,6 +134,7 @@ public class ApiApiController implements ApiApi {
                     citaf.setDiscapacidad(body.getDiscapacidad());
                     citaf.setComunidadIndigena(body.getComunidadIndigena());
                     citaf.setMigrante(body.getMigrante());
+                    citaService.createCita(body, matricula); // Se almacena la Cita
                     System.out.println("Se almaceno la cita con el ID: " + matricula);
                     return new ResponseEntity<>(citaf, HttpStatus.CREATED);
                 } else {

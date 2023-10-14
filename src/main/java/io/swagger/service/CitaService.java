@@ -53,6 +53,7 @@ public class CitaService {
                 System.out.println("\n El alumno tiene nombre: " + alumno.getNombres());
                 cita.setAlumno(alumno); // Se almacena la referencia del alumno
                 cita.setPsiquiatra(psiquiatra); // Se almacena la referencia del Psiquiatra
+                cita.setFecha(fechaBody);
                 return this.citaRepository.save(cita);
             } else {
                 // No se encontró un Alumno con el ID proporcionado
