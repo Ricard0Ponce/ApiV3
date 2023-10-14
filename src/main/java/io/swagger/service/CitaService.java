@@ -40,28 +40,20 @@ public class CitaService {
         String numT = cita.getNumTrabajador();
         LocalDate fechaBody = cita.getFecha();
         if (cita != null) {
-            // System.out.println("Buscamos al alumno con el ID: " + i);
-            // Optional<Alumno> optionalAlumno = alumnoRepository.findById(i);
             if (buscaID(matricula, numT) && validaFechaCita(fechaBody)) {
-                // String fechaBody = cita.getFecha();
                 Optional<Alumno> optionalAlumno = alumnoRepository.findById(matricula);
                 Alumno alumno = optionalAlumno.get(); // Obtiene el objeto Alumno de Optional si está presente
                 Optional<Psiquiatra> optionalPsiquiatra = psiquiatraRepository.findById(numT);
                 Psiquiatra psiquiatra = optionalPsiquiatra.get();
-                // Realiza operaciones con el objeto Alumno
-                System.out.println("\nAl parecer se encontro al Alumno con el id:  " + alumno.getMatricula());
-                System.out.println("\n El alumno tiene nombre: " + alumno.getNombres());
                 cita.setAlumno(alumno); // Se almacena la referencia del alumno
                 cita.setPsiquiatra(psiquiatra); // Se almacena la referencia del Psiquiatra
-                cita.setFecha(fechaBody);
                 return this.citaRepository.save(cita);
             } else {
                 // No se encontró un Alumno con el ID proporcionado
                 return null;
             }
-        } else {
-            return null;
         }
+        return null;
     }
 
     public List<Cita> getAllCita() {

@@ -42,20 +42,10 @@ public class Cita {
   @JsonProperty("NumTrabajador")
   private String NumTrabajador;
 
-  // Getter y Setter para fecha
-
-  @JsonIgnore // Ignora este método al serializar
-  public String getFormattedFecha() {
-    if (fecha != null) {
-      return fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-    } else {
-      return null; // O un valor predeterminado según sea necesario
-    }
-  }
-
   @Column(name = "cit_fecha")
   @JsonProperty("fecha")
-  @JsonFormat(pattern = "dd/MM/yyyy") // Añade esta línea con el patrón deseado
+  @JsonFormat(pattern = "dd/MM/yyyy") // Se define el patron deseado
+  @Schema(example = "15/10/2023")
   private LocalDate fecha = null;
 
   @Column(name = "cit_hora")

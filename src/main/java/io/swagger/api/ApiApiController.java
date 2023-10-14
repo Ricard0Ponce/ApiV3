@@ -88,9 +88,9 @@ public class ApiApiController implements ApiApi {
             try {
                 Alumno alumno = alumnoService.createAlumno(body);
                 if (alumno == null) {
-                    System.out.println("El usuario no pudo ser creado correctamente ");
+                    System.out.println("El usuario no pudo ser creado correctamente. ");
                     Error204Alumno err = new Error204Alumno(); // Aqui va error403AlumnoID
-                    err.description("El alumno no ha podido ser creado exitosamente");
+                    err.description("El alumno no ha podido ser creado exitosamente.");
                     return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
                 } else {
                     AlumnoDTOLogin alumnoDTOLogin = new AlumnoDTOLogin();
@@ -104,7 +104,7 @@ public class ApiApiController implements ApiApi {
             } catch (Exception e) {
                 System.out.println("A sucedido un error");
                 Error500Alumno err = new Error500Alumno();
-                err.description("Ha sucedido un error en el servidor");
+                err.description("Ha sucedido un error en el servidor.");
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -122,24 +122,28 @@ public class ApiApiController implements ApiApi {
             try {
                 // Pasa de Long a Integer
                 String numTrabajador = body.getNumTrabajador(); // Manda el dato del alumno
-                if (citaService.buscaID(matricula, numTrabajador) && citaService.validaFechaCita(body.getFecha())) {
-                    // Condicional para saber que el Alumno existe ante de hacer esto:
-                    System.out.println("Se valido hasta la entrada de la creacion del objeto");
-                    Cita citaf = new Cita();
-                    // citaf.setId(id); // Darle el valor del ID del alumno
-                    citaf.setFecha(body.getFecha());
-                    citaf.setHora(body.getHora());
-                    citaf.setNumTrabajador(body.getNumTrabajador());
-                    citaf.setMotivoCita(body.getMotivoCita());
-                    citaf.setDiscapacidad(body.getDiscapacidad());
-                    citaf.setComunidadIndigena(body.getComunidadIndigena());
-                    citaf.setMigrante(body.getMigrante());
-                    citaService.createCita(body, matricula); // Se almacena la Cita
-                    System.out.println("Se almaceno la cita con el ID: " + matricula);
-                    return new ResponseEntity<>(citaf, HttpStatus.CREATED);
+                if (citaService.buscaID(matricula, numTrabajador)) {
+                    System.out.println("Se encontro la matricula y el num de Trabajador.");
+                    if (citaService.validaFechaCita(body.getFecha())) {
+                        System.out.println("Se ingreso una fecha valida");
+                        Cita citaf = new Cita();
+                        citaf = citaService.createCita(body, matricula);
+                        if (citaf != null) {
+                            System.out.println("Se almaceno la cita con el ID: " + matricula);
+                            return new ResponseEntity<>(citaf, HttpStatus.CREATED);
+                        } else {
+                            Error404Cita err = new Error404Cita();
+                            err.description("La cita no ha podido ser creada exitosamente.");
+                            return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                        }
+                    } else {
+                        Error404Cita err = new Error404Cita();
+                        err.description("Error: La fecha que eligio ya paso.");
+                        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                    }
                 } else {
                     Error404Cita err = new Error404Cita();
-                    err.description("La cita no ha podido ser creada exitosamente");
+                    err.description("Error: La matricula o el numero de trabajador son incorrectos.");
                     return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
@@ -158,10 +162,15 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
+                if (body.getNumTrabajador().length() != 10) {
+                    Error404Psiquiatra err = new Error404Psiquiatra();
+                    err.setDescription("Error: El numero de trabajador contiene especificamente 10 digitos.");
+                    return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+                }
                 PsiquiatraDTO psi = psiquiatraService.createPsiquiatra(body);
                 if (psi == null) {
                     Error204Psiquiatra err = new Error204Psiquiatra();
-                    err.setDescription("La cuenta del psiquiatra no ha podido ser creada");
+                    err.setDescription("La cuenta del psiquiatra no ha podido ser creada.");
                     return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 } else {
                     return new ResponseEntity<>(psi, HttpStatus.CREATED);
@@ -184,18 +193,23 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
+                if (matricula.length() != 10) {
+                    Error404Cita err = new Error404Cita();
+                    err.description("Error: La matricula debe contener exactamente 10 digitos.");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                }
                 boolean find = citaService.deleteCita(matricula, id);
                 if (find) {
                     return new ResponseEntity<>(HttpStatus.OK);
                 } else {
-                    Error204Psiquiatra err = new Error204Psiquiatra();
-                    err.description("La cita no ha podido ser eliminado debido a que no ha sido encontrado");
+                    Error404Cita err = new Error404Cita();
+                    err.description("La cita no ha podido ser eliminado debido a que no ha sido encontrado.");
                     return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 Error500Cita err = new Error500Cita();
-                err.description("Ha sucedido un error en el servidor");
+                err.description("Ha sucedido un error en el servidor.");
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -208,12 +222,11 @@ public class ApiApiController implements ApiApi {
         if (accept != null && accept.contains("application/json")) {
             try {
                 List<AlumnoDTOid> alumnoList = alumnoService.getAllAlumnos();
-                if (alumnoList.isEmpty()) {
+                if (alumnoService.getAllAlumnos().isEmpty()) {
                     Error204Alumno err = new Error204Alumno();
                     System.out.println("No se cargo la lista de Alumnos");
-                    err.description("No se ha podido cargar la lista de alumnos");
+                    err.description("La solicitud fue correcta, sin embargo no se encontraron alumnos registrados.");
                     return new ResponseEntity<>(err, HttpStatus.NO_CONTENT);
-                    // return ResponseEntity.status(HttpStatus.NO_CONTENT).body(err);
                 }
                 return new ResponseEntity<>(alumnoList, HttpStatus.OK);
             } catch (Exception e) {
@@ -234,14 +247,14 @@ public class ApiApiController implements ApiApi {
                 List<Cita> citaList = citaService.getAllCita();
                 if (citaList.isEmpty()) {
                     Error204Cita err = new Error204Cita();
-                    err.description("No se han encontrado las citas");
+                    err.description("La solicitud fue correcta, sin embargo no se encontraron citas registradas.");
                     return new ResponseEntity<>(err, HttpStatus.NO_CONTENT);
                 }
                 return new ResponseEntity<>(citaList, HttpStatus.OK);
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 Error500Cita err = new Error500Cita();
-                err.description("Ha sucedido un error en el servidor");
+                err.description("Ha sucedido un error en el servidor.");
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -256,14 +269,15 @@ public class ApiApiController implements ApiApi {
                 List<PsiquiatraDTO> psiList = psiquiatraService.getAllPsiquiatras();
                 if (psiList.isEmpty()) {
                     Error204Psiquiatra err = new Error204Psiquiatra();
-                    err.description("No se ha encontrado la lista de Psiquiatras");
+                    err.description(
+                            "La solicitud se proceso de manera correcta, sin embargo no se encontraron Psiquiatras registrados.");
                     return new ResponseEntity<>(err, HttpStatus.NO_CONTENT);
                 }
                 return new ResponseEntity<>(psiList, HttpStatus.OK);
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 Error500Psiquiatra err = new Error500Psiquiatra();
-                err.description("Ha sucedido un error en el servidor");
+                err.description("Ha sucedido un error en el servidor.");
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -276,19 +290,23 @@ public class ApiApiController implements ApiApi {
 
         if (accept != null && accept.contains("application/json")) {
             try {
+                if (matricula.length() != 10) {
+                    Error404AlumnoID err = new Error404AlumnoID();
+                    err.description("Error: La matricula debe contener exactamente 10 digitos.");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                }
                 AlumnoDTOid alumnoDTO = alumnoService.getAlumnoById(matricula);
-
                 if (alumnoDTO != null) {
                     return new ResponseEntity<>(alumnoDTO, HttpStatus.OK);
                 } else {
                     Error404AlumnoID err = new Error404AlumnoID();
-                    err.description("No se ha encontrado al alumno con esa matricula");
+                    err.description("No se ha encontrado al alumno con esa matricula.");
                     return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 log.error("An error occurred", e);
                 Error500Alumno err = new Error500Alumno();
-                err.description("Ha sucedido un error con el servidor");
+                err.description("Ha sucedido un error con el servidor.");
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -302,12 +320,17 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
+                if (matricula.length() != 10) {
+                    Error404Cita err = new Error404Cita();
+                    err.description("Error: La matricula debe llevar exactamente 10 digitos.");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                }
                 Cita resp = citaService.getCitaById(matricula, id);
                 if (resp != null) {
                     return new ResponseEntity<>(resp, HttpStatus.OK);
                 } else {
                     Error404Cita err = new Error404Cita();
-                    err.description("No se ha encontrado la cita con ese ID");
+                    err.description("No se ha encontrado la cita con ese ID.");
                     return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
@@ -326,19 +349,33 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                PsiquiatraDTO psi;
-                psi = psiquiatraService.loginPsiquiatra(body);
-                if (psi != null) {
-                    return new ResponseEntity<>(psi, HttpStatus.OK);
-                } else {
+                if (body.getNumTrabajador().length() != 10) {
                     Error404Psiquiatra err = new Error404Psiquiatra();
-                    err.description("No se ha podido logear debido a un error");
-                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                    err.description("Error: El numero de trabajador debe llevar exactamente 10 digitos.");
+                    return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+                } else {
+                    PsiquiatraDTO psiDTO = psiquiatraService.getPsiquiatraByNumTrabajador(body.getNumTrabajador());
+                    if (psiDTO == null) { // Doble condicion
+                        Error404Psiquiatra err = new Error404Psiquiatra();
+                        err.description("Error: No se encontro el numero de trabajador.");
+                        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                    } else {
+                        PsiquiatraDTO psi;
+                        psi = psiquiatraService.loginPsiquiatra(body);
+                        if (psi != null) {
+                            return new ResponseEntity<>(psi, HttpStatus.OK);
+                        } else {
+                            Error404Psiquiatra err = new Error404Psiquiatra();
+                            err.description(
+                                    "Error: Se encontro el numero de trabajador pero el password es incorrecto.");
+                            return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                        }
+                    }
                 }
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 Error500Psiquiatra err = new Error500Psiquiatra();
-                err.description("Ha sucedido un error en el servidor");
+                err.description("Ha sucedido un error en el servidor.");
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -347,11 +384,16 @@ public class ApiApiController implements ApiApi {
     }
 
     public ResponseEntity<?> getPsiquiatraByNumTrabajador(
-            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("NumTrabajador") String NuumTrabajador) {
+            @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("NumTrabajador") String NumTrabajador) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                PsiquiatraDTO psiquiatraDTO = psiquiatraService.getPsiquiatraByNumTrabajador(NuumTrabajador);
+                if (NumTrabajador.length() != 10) {
+                    Error404AlumnoID err = new Error404AlumnoID();
+                    err.description("Error: El numero de trabajador lleva exactamente 10 digitos.");
+                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                }
+                PsiquiatraDTO psiquiatraDTO = psiquiatraService.getPsiquiatraByNumTrabajador(NumTrabajador);
 
                 if (psiquiatraDTO != null) {
                     return new ResponseEntity<>(psiquiatraDTO, HttpStatus.OK);
@@ -363,7 +405,7 @@ public class ApiApiController implements ApiApi {
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 Error500Psiquiatra err = new Error500Psiquiatra();
-                err.description("Ha sucedido un error en el servidor");
+                err.description("Ha sucedido un error en el servidor.");
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -377,20 +419,33 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                // alumnoService.loginAlumno(body);
-                AlumnoDTOLogin alumno;
-                alumno = alumnoService.loginAlumno(body);
-                if (alumno != null) {
-                    System.out.println("Nombre del alumno: " + alumno.getNombres());
-                    return new ResponseEntity<>(alumno, HttpStatus.OK);
+                if (body.getMatricula().length() != 10) {
+                    Error404AlumnoID err = new Error404AlumnoID();
+                    err.description("Error: La matricula debe llevar 10 digitos.");
+                    return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+                } else {
+                    AlumnoDTOid al = alumnoService.getAlumnoById(body.getMatricula());
+                    if (al == null) {
+                        Error404AlumnoID err = new Error404AlumnoID();
+                        err.description("Error: No se encontro la matricula.");
+                        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                    } else {
+                        AlumnoDTOLogin alumno;
+                        alumno = alumnoService.loginAlumno(body);
+                        if (alumno != null) {
+                            System.out.println("Nombre del alumno: " + alumno.getNombres());
+                            return new ResponseEntity<>(alumno, HttpStatus.OK);
+                        }
+                        Error404AlumnoID err = new Error404AlumnoID();
+                        err.description("Error: Se encontro la matricula pero el password es incorrecto.");
+                        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                    }
                 }
-                Error404AlumnoID err = new Error404AlumnoID();
-                err.description("No se ha podido iniciar sesion, verifique los datos que esta ingresando");
-                return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 Error500Alumno err = new Error500Alumno();
-                err.description("Ha sucedido un error en el servidor");
+                err.description("Ha sucedido un error en el servidor.");
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -411,13 +466,13 @@ public class ApiApiController implements ApiApi {
                     return new ResponseEntity<>(resp, HttpStatus.OK);
                 } else {
                     Error404CitaID err = new Error404CitaID();
-                    err.description("No se han podido actualizar los datos, verifica tus datos");
+                    err.description("No se han podido actualizar los datos, verifica tus datos.");
                     return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
             } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 Error500Cita err = new Error500Cita();
-                err.description("Ha sucedido un error en el servidor");
+                err.description("Ha sucedido un error en el servidor.");
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
