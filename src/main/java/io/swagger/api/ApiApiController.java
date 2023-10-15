@@ -5,6 +5,7 @@ import io.swagger.model.AlumnoDTOLogin;
 import io.swagger.model.AlumnoDTOid;
 import io.swagger.model.AlumnosLoginBody;
 import io.swagger.model.Cita;
+import io.swagger.model.CitaDTO;
 import io.swagger.model.Error204Alumno;
 import io.swagger.model.Error204Cita;
 import io.swagger.model.Error204Psiquiatra;
@@ -85,7 +86,7 @@ public class ApiApiController implements ApiApi {
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Alumno body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
+            try {// Extra: Comparar si esa matricula ya fue usada
                 Alumno alumno = alumnoService.createAlumno(body);
                 if (alumno == null) {
                     System.out.println("El usuario no pudo ser creado correctamente. ");
@@ -244,7 +245,7 @@ public class ApiApiController implements ApiApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                List<Cita> citaList = citaService.getAllCita();
+                List<CitaDTO> citaList = citaService.getAllCita();
                 if (citaList.isEmpty()) {
                     Error204Cita err = new Error204Cita();
                     err.description("La solicitud fue correcta, sin embargo no se encontraron citas registradas.");

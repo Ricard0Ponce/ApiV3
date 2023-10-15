@@ -8,6 +8,7 @@ import io.swagger.data.repository.CitaRepository;
 import io.swagger.data.repository.PsiquiatraRepository;
 import io.swagger.model.Alumno;
 import io.swagger.model.Cita;
+import io.swagger.model.CitaDTO;
 import io.swagger.model.Psiquiatra;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class CitaService {
                 Psiquiatra psiquiatra = optionalPsiquiatra.get();
                 cita.setAlumno(alumno); // Se almacena la referencia del alumno
                 cita.setPsiquiatra(psiquiatra); // Se almacena la referencia del Psiquiatra
+                System.out.println("La cita se registro al alumno con matricula: " + cita.getAlumno().getMatricula());
                 return this.citaRepository.save(cita);
             } else {
                 // No se encontró un Alumno con el ID proporcionado
@@ -56,11 +58,11 @@ public class CitaService {
         return null;
     }
 
-    public List<Cita> getAllCita() {
+    public List<CitaDTO> getAllCita() {
         List<Cita> citasList = citaRepository.findAll();
-        List<Cita> listaFinal = new ArrayList<>();
+        List<CitaDTO> listaFinal = new ArrayList<>();
         for (Cita cita : citasList) {
-            Cita varcitas = new Cita();
+            CitaDTO varcitas = new CitaDTO();
             varcitas.setId(cita.getId());
             varcitas.setFecha(cita.getFecha());
             varcitas.setHora(cita.getHora());
@@ -69,6 +71,7 @@ public class CitaService {
             varcitas.setDiscapacidad(cita.getDiscapacidad());
             varcitas.setComunidadIndigena(cita.getComunidadIndigena());
             varcitas.setMigrante(cita.getMigrante());
+            varcitas.setMatriculaAlumno(cita.getAlumno().getMatricula());
             listaFinal.add(varcitas);
         }
         return listaFinal;
