@@ -10,6 +10,7 @@ import io.swagger.model.AlumnoDTOLogin;
 import io.swagger.model.AlumnoDTOid;
 import io.swagger.model.AlumnosLoginBody;
 import io.swagger.model.Cita;
+import io.swagger.model.CitaDTO;
 import io.swagger.model.Error204Alumno;
 import io.swagger.model.Error204Cita;
 import io.swagger.model.Error204Psiquiatra;
@@ -69,7 +70,7 @@ public interface ApiApi {
 
         @Operation(summary = "Crear una nueva cita", description = "", tags = { "Citas" })
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "201", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Cita.class))),
+                        @ApiResponse(responseCode = "201", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CitaDTO.class))),
 
                         @ApiResponse(responseCode = "404", description = "No Content", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error404Cita.class))) })
         @RequestMapping(value = "/api/alumnos/{matricula}/citas", produces = { "application/json" }, consumes = {
@@ -116,7 +117,7 @@ public interface ApiApi {
 
         @Operation(summary = "Regresa una lista de todas las citas", description = "", tags = { "Citas" })
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Cita.class)))),
+                        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CitaDTO.class)))),
 
                         @ApiResponse(responseCode = "204", description = "No se encontraron citas", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error204Cita.class))),
 
@@ -149,7 +150,7 @@ public interface ApiApi {
 
         @Operation(summary = "Regresa cita por id", description = "", tags = { "Citas" })
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Cita.class))),
+                        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CitaDTO.class))),
 
                         @ApiResponse(responseCode = "404", description = "No se encontro la cita", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error404CitaID.class))),
 

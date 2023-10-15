@@ -40,7 +40,6 @@ public class AlumnoService {
         if (buscarAlumno.isPresent()) {
             Alumno alumnoB = buscarAlumno.get();
             AlumnoDTOid alumnoDTO = new AlumnoDTOid();
-
             alumnoDTO.setMatricula(alumnoB.getMatricula());
             alumnoDTO.setNombres(alumnoB.getNombres());
             alumnoDTO.setApellidoPaterno(alumnoB.getApellidoPaterno());

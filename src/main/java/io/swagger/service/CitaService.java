@@ -116,11 +116,10 @@ public class CitaService {
     // Obtiene una cita dada una matricula y su ID de cita.
     public Cita getCitaById(String matricula, Long idCita) {
         List<Cita> citasList = citaRepository.findAll();
-        Cita res = new Cita();
         for (Cita cita : citasList) {
             if (cita.getAlumno().getMatricula().compareTo(matricula) == 0
                     && cita.getId().compareTo(idCita) == 0) {
-                return res = cita; // La cita encontrada es igual al alumno.
+                return cita; // La cita encontrada es igual al alumno.
             }
         }
         return null;

@@ -86,21 +86,30 @@ public class ApiApiController implements ApiApi {
             @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody Alumno body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {// Extra: Comparar si esa matricula ya fue usada
-                Alumno alumno = alumnoService.createAlumno(body);
-                if (alumno == null) {
-                    System.out.println("El usuario no pudo ser creado correctamente. ");
-                    Error204Alumno err = new Error204Alumno(); // Aqui va error403AlumnoID
-                    err.description("El alumno no ha podido ser creado exitosamente.");
-                    return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+            try { // Si es nulo se puede crear, si no es nulo no se puede crear
+                AlumnoDTOid alum = new AlumnoDTOid();
+                alum = alumnoService.getAlumnoById(body.getMatricula());
+                if (alum == null) { // Si es null no se encontro la matricula, entonces se puede almacenar
+                    Alumno alumno = alumnoService.createAlumno(body);
+                    if (alumno == null) {
+                        System.out.println("El usuario no pudo ser creado correctamente. ");
+                        Error204Alumno err = new Error204Alumno(); // Aqui va error403AlumnoID
+                        err.description("El alumno no ha podido ser creado exitosamente.");
+                        return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
+                    } else {
+                        AlumnoDTOLogin alumnoDTOLogin = new AlumnoDTOLogin();
+                        alumnoDTOLogin.setApellidoPaterno(body.getApellidoPaterno());
+                        alumnoDTOLogin.setNombres(body.getNombres());
+                        alumnoDTOLogin.setApellidoMaterno(body.getApellidoMaterno());
+                        alumnoDTOLogin.setMatricula(body.getMatricula());
+                        System.out.println("Se almaceno el alumno con nombre: " + alumno.getNombres());
+                        return new ResponseEntity<>(alumnoDTOLogin, HttpStatus.CREATED);
+                    }
                 } else {
-                    AlumnoDTOLogin alumnoDTOLogin = new AlumnoDTOLogin();
-                    alumnoDTOLogin.setApellidoPaterno(body.getApellidoPaterno());
-                    alumnoDTOLogin.setNombres(body.getNombres());
-                    alumnoDTOLogin.setApellidoMaterno(body.getApellidoMaterno());
-                    alumnoDTOLogin.setMatricula(body.getMatricula());
-                    System.out.println("Se almaceno el alumno con nombre: " + alumno.getNombres());
-                    return new ResponseEntity<>(alumnoDTOLogin, HttpStatus.CREATED);
+                    System.out.println("\nLa matricula ya se encuentra en uso. ");
+                    Error204Alumno err = new Error204Alumno();
+                    err.description("Error: La matricula especificada ya esta en uso.");
+                    return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
                 }
             } catch (Exception e) {
                 System.out.println("A sucedido un error");
@@ -109,9 +118,7 @@ public class ApiApiController implements ApiApi {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
         }
-
         return new ResponseEntity<AlumnoDTOLogin>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -167,14 +174,22 @@ public class ApiApiController implements ApiApi {
                     Error404Psiquiatra err = new Error404Psiquiatra();
                     err.setDescription("Error: El numero de trabajador contiene especificamente 10 digitos.");
                     return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
-                }
-                PsiquiatraDTO psi = psiquiatraService.createPsiquiatra(body);
-                if (psi == null) {
-                    Error204Psiquiatra err = new Error204Psiquiatra();
-                    err.setDescription("La cuenta del psiquiatra no ha podido ser creada.");
-                    return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 } else {
-                    return new ResponseEntity<>(psi, HttpStatus.CREATED);
+                    PsiquiatraDTO valNum = psiquiatraService.getPsiquiatraByNumTrabajador(body.getNumTrabajador());
+                    if (valNum == null) {
+                        PsiquiatraDTO psi = psiquiatraService.createPsiquiatra(body);
+                        if (psi == null) { // Si es null quiere decir que no se encontro el NumT en la BD
+                            Error204Psiquiatra err = new Error204Psiquiatra();
+                            err.setDescription("Error: La cuenta del psiquiatra no ha podido ser creada.");
+                            return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                        } else {
+                            return new ResponseEntity<>(psi, HttpStatus.CREATED);
+                        }
+                    } else {
+                        Error204Psiquiatra err = new Error204Psiquiatra();
+                        err.setDescription("Error: El numero de trabajador que indico ya se encuentra registrado.");
+                        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                    }
                 }
 
             } catch (Exception e) {
@@ -326,9 +341,19 @@ public class ApiApiController implements ApiApi {
                     err.description("Error: La matricula debe llevar exactamente 10 digitos.");
                     return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
                 }
-                Cita resp = citaService.getCitaById(matricula, id);
-                if (resp != null) {
-                    return new ResponseEntity<>(resp, HttpStatus.OK);
+                Cita cita = citaService.getCitaById(matricula, id);
+                if (cita != null) {
+                    CitaDTO citadto = new CitaDTO();
+                    citadto.setId(cita.getId());
+                    citadto.setNumTrabajador(cita.getNumTrabajador());
+                    citadto.setFecha(cita.getFecha());
+                    citadto.setHora(cita.getHora());
+                    citadto.setMotivoCita(cita.getMotivoCita());
+                    citadto.setMatriculaAlumno(matricula);
+                    citadto.setComunidadIndigena(cita.getComunidadIndigena());
+                    citadto.setMigrante(cita.getMigrante());
+                    citadto.setDiscapacidad(cita.getDiscapacidad());
+                    return new ResponseEntity<>(citadto, HttpStatus.OK);
                 } else {
                     Error404Cita err = new Error404Cita();
                     err.description("No se ha encontrado la cita con ese ID.");
