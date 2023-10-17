@@ -15,7 +15,7 @@ import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 
 import java.util.Optional;
 
@@ -138,23 +138,6 @@ public class CitaService {
         return null;
     }
 
-    // Se valida que la fecha este escrita en el formato correcto.
-    /*
-     * public boolean validandoFormatoFecha(String fechaBody) {
-     * // Define el patrón de formato para la cadena
-     * DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-     * // Intenta convertir la cadena en un objeto LocalDate
-     * try {
-     * LocalDate fecha = LocalDate.parse(fechaBody, formatter);
-     * System.out.println("La Fecha recibida es: " + fecha);
-     * return true;
-     * } catch (java.time.format.DateTimeParseException e) {
-     * System.out.println("La cadena no tiene el formato adecuado.");
-     * return false;
-     * }
-     * }
-     */
-
     // Validamos que la fecha
     public boolean validaFechaCita(LocalDate fechaBody) {
         try {
@@ -184,5 +167,15 @@ public class CitaService {
             }
         }
         return false;
+    }
+
+    public boolean dispoibilidadFechaCita(LocalDate fecha, LocalTime hora) {
+        // Busca si ya hay una cita en esa fecha.
+        Cita cita = citaRepository.findByFechaAndHora(fecha, hora);
+        if (cita == null) { // Si la cita es null, quiere decir que si se puede agendar ese dia
+            return true;
+        } else {
+            return false;
+        }
     }
 }

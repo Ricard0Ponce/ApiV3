@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Validated
 @Data // Agrega los getters y setters
@@ -26,7 +27,7 @@ public class CitaDTO {
     private LocalDate fecha = null;
 
     @JsonProperty("hora")
-    private String hora = null;
+    private LocalTime hora = null;
 
     @JsonProperty("motivoCita")
     private String motivoCita = null;
@@ -63,7 +64,7 @@ public class CitaDTO {
         this.id = id;
     }
 
-    public CitaDTO hora(String hora) {
+    public CitaDTO hora(LocalTime hora) {
         this.hora = hora;
         return this;
     }
@@ -75,11 +76,11 @@ public class CitaDTO {
      **/
     @Schema(description = "")
 
-    public String getHora() {
+    public LocalTime getHora() {
         return hora;
     }
 
-    public void setHora(String hora) {
+    public void setHora(LocalTime hora) {
         this.hora = hora;
     }
 

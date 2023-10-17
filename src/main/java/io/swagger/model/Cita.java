@@ -2,7 +2,8 @@ package io.swagger.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -18,11 +19,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import javax.validation.constraints.*;
 
 /**
  * Cita
@@ -50,7 +48,11 @@ public class Cita {
 
   @Column(name = "cit_hora")
   @JsonProperty("hora")
-  private String hora = null;
+  @JsonFormat(pattern = "H:mm")
+  @Schema(example = "15:30")
+  // @JsonSerialize(using = CustomLocalTimeSerializer.class) // Usa el
+  // serializador personalizado
+  private LocalTime hora;
 
   @Column(name = "cit_motivocita")
   @JsonProperty("motivoCita")
@@ -121,7 +123,7 @@ public class Cita {
     this.fecha = fecha;
   }
 
-  public Cita hora(String hora) {
+  public Cita hora(LocalTime hora) {
     this.hora = hora;
     return this;
   }
@@ -133,11 +135,11 @@ public class Cita {
    **/
   @Schema(description = "")
 
-  public String getHora() {
+  public LocalTime getHora() {
     return hora;
   }
 
-  public void setHora(String hora) {
+  public void setHora(LocalTime hora) {
     this.hora = hora;
   }
 

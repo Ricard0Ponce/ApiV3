@@ -134,15 +134,21 @@ public class ApiApiController implements ApiApi {
                     System.out.println("Se encontro la matricula y el num de Trabajador.");
                     if (citaService.validaFechaCita(body.getFecha())) {
                         System.out.println("Se ingreso una fecha valida");
-                        Cita citaf = new Cita();
-                        citaf = citaService.createCita(body, matricula);
-                        if (citaf != null) {
-                            System.out.println("Se almaceno la cita con el ID: " + matricula);
-                            return new ResponseEntity<>(citaf, HttpStatus.CREATED);
+                        if (citaService.dispoibilidadFechaCita(body.getFecha(), body.getHora())) {
+                            Cita citaf = new Cita(); //
+                            citaf = citaService.createCita(body, matricula);
+                            if (citaf != null) {
+                                System.out.println("Se almaceno la cita con el ID: " + matricula);
+                                return new ResponseEntity<>(citaf, HttpStatus.CREATED);
+                            } else {
+                                Error404Cita err = new Error404Cita();
+                                err.description("La cita no ha podido ser creada exitosamente.");
+                                return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                            }
                         } else {
                             Error404Cita err = new Error404Cita();
-                            err.description("La cita no ha podido ser creada exitosamente.");
-                            return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+                            err.description("Error: La hora especificada ya tiene una cita registrada previamente.");
+                            return new ResponseEntity<>(err, HttpStatus.FORBIDDEN);
                         }
                     } else {
                         Error404Cita err = new Error404Cita();
