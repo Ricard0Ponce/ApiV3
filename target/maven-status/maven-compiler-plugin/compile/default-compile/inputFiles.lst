@@ -12,6 +12,7 @@ C:\Proyectos\v3\Version3Rep\ApiV3\src\main\java\io\swagger\api\ApiResponseMessag
 C:\Proyectos\v3\Version3Rep\ApiV3\src\main\java\io\swagger\model\Error204Cita.java
 C:\Proyectos\v3\Version3Rep\ApiV3\src\main\java\io\swagger\model\Error204Psiquiatra.java
 C:\Proyectos\v3\Version3Rep\ApiV3\src\main\java\io\swagger\configuration\SwaggerDocumentationConfig.java
+C:\Proyectos\v3\Version3Rep\ApiV3\src\main\java\io\swagger\model\CitaDTO.java
 C:\Proyectos\v3\Version3Rep\ApiV3\src\main\java\io\swagger\model\Alumno.java
 C:\Proyectos\v3\Version3Rep\ApiV3\src\main\java\io\swagger\configuration\LocalDateConverter.java
 C:\Proyectos\v3\Version3Rep\ApiV3\src\main\java\io\swagger\model\Psiquiatra.java

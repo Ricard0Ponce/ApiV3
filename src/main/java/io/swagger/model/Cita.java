@@ -18,6 +18,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+
 import org.springframework.validation.annotation.Validated;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -114,7 +116,7 @@ public class Cita {
    **/
   @Schema(description = "")
 
-  // @Pattern(regexp = "dd/MM/yyyy")
+  // @Pattern(regexp = "^\\d{2}/\\d{2}/ \\d{4}$") // Agregue esto para el ejemplo
   public LocalDate getFecha() {
     return fecha;
   }

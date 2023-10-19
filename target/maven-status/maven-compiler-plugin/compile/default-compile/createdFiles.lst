@@ -27,6 +27,7 @@ io\swagger\configuration\CustomInstantDeserializer$FromIntegerArguments.class
 io\swagger\model\Error404CitaID.class
 io\swagger\model\Error500Psiquiatra.class
 io\swagger\api\ApiException.class
+io\swagger\model\CitaDTO.class
 io\swagger\configuration\CustomInstantDeserializer$2.class
 io\swagger\model\AlumnosLoginBody.class
 io\swagger\configuration\CustomInstantDeserializer$FromDecimalArguments.class
