@@ -3,6 +3,7 @@ package io.swagger;
 import io.swagger.configuration.LocalDateConverter;
 import io.swagger.configuration.LocalDateTimeConverter;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
@@ -17,15 +18,20 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan(basePackages = { "io.swagger", "io.swagger.api", "io.swagger.configuration" })
 public class Swagger2SpringBoot implements CommandLineRunner {
 
+    public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.configure().load();
+        String dbUrl = dotenv.get("db_url");
+        String dbUsername = dotenv.get("db_username");
+        String dbPassword = dotenv.get("db_password");
+
+        SpringApplication.run(Swagger2SpringBoot.class, args);
+    }
+
     @Override
     public void run(String... arg0) throws Exception {
         if (arg0.length > 0 && arg0[0].equals("exitcode")) {
             throw new ExitException();
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        new SpringApplication(Swagger2SpringBoot.class).run(args);
     }
 
     @Configuration
