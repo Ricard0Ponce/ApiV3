@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Psiquiatra
@@ -38,6 +39,7 @@ public class Psiquiatra {
   @JsonProperty("numTrabajador")
   private String numTrabajador = null;
 
+  @NotBlank(message = "El password del trabajador no puede estar en blanco.")
   @Column(name = "psi_password")
   @JsonProperty("password")
   private String password = null;
@@ -48,14 +50,17 @@ public class Psiquiatra {
   // Aqui se hace la inyeccion de Psiquiatra a citas
   private List<Cita> citas = null;
 
+  @NotBlank(message = "Los nombres del trabajador no pueden estar en blanco.")
   @Column(name = "psi_nombres")
   @JsonProperty("nombres")
   private String nombres = null;
 
+  @NotBlank(message = "El apellidos del trabajador no pueden estar en blanco.")
   @Column(name = "psi_apellidopaterno")
   @JsonProperty("apellidoPaterno")
   private String apellidoPaterno = null;
 
+  @NotBlank(message = "El apellidos Materno del trabajador no pueden estar en blanco.")
   @Column(name = "psi_apellidomaterno")
   @JsonProperty("apellidoMaterno")
   private String apellidoMaterno = null;

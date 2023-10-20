@@ -135,7 +135,7 @@ public class ApiApiController implements ApiApi {
                     if (citaService.validaFechaCita(body.getFecha())) {
                         System.out.println("Se ingreso una fecha valida");
                         if (citaService.dispoibilidadFechaCita(body.getFecha(), body.getHora())) {
-                            if (body.getMotivoCita().length() > 350) {
+                            if (body.getMotivoCita().length() > 230) {
                                 Error404Cita err = new Error404Cita();
                                 err.description("Error: El tamaño de la cadena de motivo cita es muy grande.");
                                 return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);

@@ -24,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Alumno
@@ -37,8 +38,10 @@ public class Alumno {
   @Id
   @Column(name = "alu_matricula")
   @JsonProperty("matricula")
+  @NotBlank(message = "La matricula no puede estar en blanco.")
   private String matricula = null;
 
+  @NotBlank(message = "El password no puede estar en blanco.")
   @Column(name = "alu_password")
   @JsonProperty("password")
   private String password = null;
@@ -47,26 +50,32 @@ public class Alumno {
   @JsonIgnore // Para evitar la serialización recursiva si usas Jackson
   private List<Cita> citas = new ArrayList<>();
 
+  @NotBlank(message = "Los nombres no pueden estar en blanco.")
   @Column(name = "alu_nombres")
   @JsonProperty("nombres")
   private String nombres = null;
 
+  @NotBlank(message = "El apellido no puede estar en blanco.")
   @Column(name = "alu_apellidopaterno")
   @JsonProperty("apellidoPaterno")
   private String apellidoPaterno = null;
 
+  @NotBlank(message = "El apellido no puede estar en blanco.")
   @Column(name = "alu_apellidomaterno")
   @JsonProperty("apellidoMaterno")
   private String apellidoMaterno = null;
 
+  @NotBlank(message = "El correo no puede estar en blanco.")
   @Column(name = "alu_email")
   @JsonProperty("email")
   private String email = null;
 
+  @NotBlank(message = "El genero no puede estar en blanco.")
   @Column(name = "alu_genero")
   @JsonProperty("genero")
   private String genero = null;
 
+  @NotBlank(message = "El telefono movil no puede estar en blanco.")
   @Column(name = "alu_telefonomovil")
   @JsonProperty("telefonoMovil")
   private String telefonoMovil = null;
